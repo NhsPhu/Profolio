@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+
+<html class="dark scroll-smooth" lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+@layer base{
+  html,body{margin:0;padding:0;}
+  body{overscroll-behavior:none;}
+  main>:first-child{margin-top:0!important;}
+  main>:last-child{margin-bottom:0!important;}
+}
+::-webkit-scrollbar{display:none;}
+
+/* Interactive Canvas for dynamic particle mesh */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Linear / Vercel style subtle dot grid overlay */
+.bg-grid-pattern {
+  background-image: radial-gradient(rgba(192, 193, 255, 0.08) 1.2px, transparent 1.2px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 25%, black 20%, transparent 90%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 25%, black 20%, transparent 90%);
+}
+
+/* Floating ambient glowing aurora orbs */
+@keyframes floatOrb1 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(70px, 50px) scale(1.15); }
+}
+@keyframes floatOrb2 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(-60px, -45px) scale(1.1); }
+}
+@keyframes floatOrb3 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(50px, -50px) scale(1.2); }
+}
+.animate-orb-1 { animation: floatOrb1 18s ease-in-out infinite alternate; }
+.animate-orb-2 { animation: floatOrb2 22s ease-in-out infinite alternate; }
+.animate-orb-3 { animation: floatOrb3 20s ease-in-out infinite alternate; }
+
+/* Custom Interactive Cursor Glow & Dot */
+.custom-cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 550px;
+  height: 550px;
+  margin-top: -275px;
+  margin-left: -275px;
+  background: radial-gradient(circle, rgba(128, 131, 255, 0.09) 0%, rgba(6, 182, 212, 0.04) 38%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  will-change: transform;
+  mix-blend-mode: screen;
+}
+
+.custom-cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  margin-left: -4px;
+  background-color: #c0c1ff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  box-shadow: 0 0 12px 2px rgba(192, 193, 255, 0.8), 0 0 24px rgba(78, 222, 163, 0.5);
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), height 0.25s cubic-bezier(0.16, 1, 0.3, 1), margin 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, background-color 0.25s ease, transform 0.05s ease-out;
+  will-change: transform;
+}
+.custom-cursor-dot.is-hover {
+  width: 44px;
+  height: 44px;
+  margin-top: -22px;
+  margin-left: -22px;
+  background-color: rgba(128, 131, 255, 0.18);
+  border: 1.5px solid rgba(192, 193, 255, 0.7);
+  box-shadow: 0 0 20px rgba(128, 131, 255, 0.4), inset 0 0 12px rgba(78, 222, 163, 0.25);
+}
+
+/* Spotlight card with mouse follow dynamic gradient border & 3D tilt */
+.spotlight-card {
+  position: relative;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  will-change: transform;
+}
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(420px circle at var(--mouse-x, -500px) var(--mouse-y, -500px), rgba(192, 193, 255, 0.55), rgba(78, 222, 163, 0.25), transparent 70%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+.spotlight-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(450px circle at var(--mouse-x, -500px) var(--mouse-y, -500px), rgba(192, 193, 255, 0.065), rgba(6, 182, 212, 0.025) 50%, transparent 75%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+.spotlight-card:hover {
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6), 0 0 30px -5px rgba(128, 131, 255, 0.2);
+}
+.spotlight-card:hover::before,
+.spotlight-card:hover::after {
+  opacity: 1;
+}
+
+/* Shimmer Light sweep animation on primary buttons */
+.shimmer-btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+.shimmer-btn::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.32) 50%,
+    transparent 80%
+  );
+  transform: rotate(25deg);
+  transition: none;
+  pointer-events: none;
+}
+.shimmer-btn:hover::after {
+  left: 140%;
+  transition: left 0.85s ease-in-out;
+}
+
+/* Scroll reveal initial states & classes */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal-item.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Blinking terminal cursor */
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.cursor-blink {
+  animation: blinkCursor 0.9s infinite;
+}
+
+/* Pulse stream data animations in SVG Telemetry */
+@keyframes pulseStream {
+  0% { stroke-dashoffset: 60; }
+  100% { stroke-dashoffset: 0; }
+}
+.stream-pulse {
+  stroke-dasharray: 6 12;
+  animation: pulseStream 2.4s linear infinite;
+}
+.stream-pulse-reverse {
+  stroke-dasharray: 6 12;
+  animation: pulseStream 2.8s linear infinite reverse;
+}
+
+/* Pulse radar ring for hire badge */
+@keyframes radarPing {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  70% { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+.radar-ring {
+  animation: radarPing 2.2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .spotlight-card:hover {
+    transform: none !important;
+  }
+  .reveal-item {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .custom-cursor-glow, .custom-cursor-dot, #bg-canvas {
+    display: none !important;
+  }
+}
+</style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-secondary-fixed-variant":"#004395","on-tertiary":"#003824","surface-container-low":"#161b2a","on-primary-container":"#0d0096","surface":"#0e1321","on-primary":"#1000a9","background":"#0e1321","on-background":"#dee2f6","on-error":"#690005","surface-variant":"#303444","outline":"#908fa0","on-tertiary-container":"#000703","secondary":"#adc6ff","secondary-fixed":"#d8e2ff","primary-container":"#8083ff","on-tertiary-fixed":"#002113","inverse-on-surface":"#2b303f","tertiary-fixed-dim":"#4edea3","on-secondary-container":"#e6ecff","primary":"#c0c1ff","on-primary-fixed":"#07006c","primary-fixed-dim":"#c0c1ff","error":"#ffb4ab","surface-bright":"#343948","inverse-primary":"#494bd6","outline-variant":"#464554","surface-dim":"#0e1321","on-secondary-fixed":"#001a42","error-container":"#93000a","surface-container":"#1a1f2e","secondary-fixed-dim":"#adc6ff","tertiary-container":"#00885d","on-primary-fixed-variant":"#2f2ebe","surface-container-high":"#252a39","on-secondary":"#002e6a","on-surface":"#dee2f6","tertiary-fixed":"#6ffbbe","primary-fixed":"#e1e0ff","on-tertiary-fixed-variant":"#005236","surface-tint":"#c0c1ff","tertiary":"#4edea3","on-error-container":"#ffdad6","inverse-surface":"#dee2f6","surface-container-highest":"#303444","secondary-container":"#0566d9","on-surface-variant":"#c7c4d7","surface-container-lowest":"#090e1c"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-md":"1rem","gutter":"1.5rem","margin-lg":"6rem","space-sm":"0.5rem","space-xl":"2.5rem","gutter-sm":"1rem","space-xs":"0.25rem","gutter-lg":"2rem","space-lg":"1.5rem","margin-md":"3rem","margin":"1.5rem"},"fontFamily":{"headline-md":["Geist"],"code-block":["JetBrains Mono"],"label-sm":["JetBrains Mono"],"label-md":["JetBrains Mono"],"headline-sm":["Geist"],"headline-lg":["Geist"],"body-sm":["Geist"],"code-inline":["JetBrains Mono"],"body-lg":["Geist"],"headline-lg-mobile":["Geist"],"body-md":["Geist"],"display":["Geist"],"display-mobile":["Geist"]},"fontSize":{"headline-md":["1.5rem",{"lineHeight":"2rem","letterSpacing":"-0.02em","fontWeight":"500"}],"code-block":["0.875rem",{"lineHeight":"1.5rem","letterSpacing":"-0.015em","fontWeight":"400"}],"label-sm":["0.6875rem",{"lineHeight":"0.875rem","letterSpacing":"0.08em","fontWeight":"500"}],"label-md":["0.75rem",{"lineHeight":"1rem","letterSpacing":"0.06em","fontWeight":"500"}],"headline-sm":["1.125rem",{"lineHeight":"1.625rem","letterSpacing":"-0.01em","fontWeight":"500"}],"headline-lg":["2.25rem",{"lineHeight":"2.75rem","letterSpacing":"-0.03em","fontWeight":"600"}],"body-sm":["0.8125rem",{"lineHeight":"1.25rem","letterSpacing":"0.01em","fontWeight":"400"}],"code-inline":["0.8125rem",{"lineHeight":"1.25rem","letterSpacing":"-0.01em","fontWeight":"400"}],"body-lg":["1.125rem",{"lineHeight":"1.875rem","letterSpacing":"0em","fontWeight":"400"}],"headline-lg-mobile":["1.75rem",{"lineHeight":"2.25rem","letterSpacing":"-0.02em","fontWeight":"600"}],"body-md":["0.9375rem",{"lineHeight":"1.5rem","letterSpacing":"0em","fontWeight":"400"}],"display":["3.75rem",{"lineHeight":"4.25rem","letterSpacing":"-0.04em","fontWeight":"600"}],"display-mobile":["2.5rem",{"lineHeight":"3rem","letterSpacing":"-0.03em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container relative">
+<!-- INTERACTIVE CURSOR ELEMENTS -->
+<div class="custom-cursor-glow" id="cursor-glow"></div>
+<div class="custom-cursor-dot" id="cursor-dot"></div>
+<!-- INTERACTIVE BACKGROUND CANVAS -->
+<canvas id="bg-canvas"></canvas>
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-surface-container-highest/40 shadow-[0_1px_16px_rgba(0,0,0,0.25)]"><div class="h-16 max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between"><a class="flex items-center gap-space-sm group" data-path="ve-toi" href="#"><div class="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant/30 flex items-center justify-center shadow-inner group-hover:border-primary/50 group-hover:shadow-[0_0_12px_rgba(192,193,255,0.3)] transition-all"><span class="font-label-md text-label-md text-primary font-bold">P</span></div><span class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors tracking-tight">Phu<span class="text-primary">.dev</span></span></a><nav class="hidden md:flex items-center gap-space-xs p-space-xs" data-active-classes="bg-surface-container text-on-surface rounded-lg"><a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="ve-toi" href="#ve-toi">Về tôi</a><a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="ky-nang" href="#ky-nang">Kỹ năng</a><a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="du-an" href="#du-an-thuc-chien">Dự án</a><a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="hoc-van" href="#ve-toi">Học vấn</a><a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="lien-he" href="#lien-he">Liên hệ</a></nav><div class="flex items-center gap-space-md"><a class="shimmer-btn hidden sm:inline-flex items-center justify-center px-space-md py-space-xs rounded-lg bg-primary-container text-on-primary-container font-label-md text-label-md hover:bg-primary hover:text-on-primary shadow-[0_0_20px_rgba(128,131,255,0.35)] transition-all active:scale-[0.98]" data-path="lien-he" href="#lien-he">Liên hệ / Hire Me</a><div class="w-8 h-8 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center text-primary"><span class="material-symbols-outlined text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface min-h-[calc(100vh-4rem)] relative overflow-hidden"><div class="flex flex-col w-full text-on-surface relative">
+<!-- SUBTLE DOT GRID BACKGROUND -->
+<div class="absolute inset-0 bg-grid-pattern pointer-events-none z-0"></div>
+<!-- AMBIENT BACKDROP PARTICLES & GLOWS (ANIMATED AURORA MESH) -->
+<div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[760px] h-[400px] bg-primary-container/20 rounded-full blur-[140px] pointer-events-none animate-orb-1 z-0"></div>
+<div class="absolute top-[28%] -left-36 w-96 h-96 bg-[#06b6d4]/15 rounded-full blur-[140px] pointer-events-none animate-orb-2 z-0"></div>
+<div class="absolute top-[58%] -right-28 w-[440px] h-[440px] bg-tertiary-container/20 rounded-full blur-[140px] pointer-events-none animate-orb-3 z-0"></div>
+<div class="absolute top-[82%] left-1/3 w-[380px] h-[380px] bg-[#6366f1]/15 rounded-full blur-[130px] pointer-events-none animate-orb-1 z-0"></div>
+<!-- HERO SECTION -->
+<section class="max-w-7xl mx-auto px-6 lg:px-12 pt-12 pb-20 lg:pt-20 lg:pb-32 relative z-10">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<!-- Left: Intro & Direct Pitch -->
+<div class="lg:col-span-7 flex flex-col items-start gap-space-lg reveal-item">
+<!-- Availability Tag with Pulsating Radar Ring -->
+<div class="inline-flex items-center gap-3 px-3.5 py-1.5 rounded-full bg-surface-container-high/80 border border-tertiary/20 backdrop-blur-md shadow-[0_0_18px_rgba(78,222,163,0.15)]">
+<span class="relative flex h-2.5 w-2.5 items-center justify-center">
+<span class="radar-ring absolute inline-flex h-4 w-4 rounded-full bg-tertiary opacity-75"></span>
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-tertiary shadow-[0_0_8px_#4edea3]"></span>
+</span>
+<span class="font-label-md text-label-md text-on-surface tracking-wide">Sẵn sàng nhận việc Intern / Fresher</span>
+</div>
+<!-- Headline and Main Tagline -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center gap-3">
+<span class="font-code-inline text-code-inline text-primary tracking-widest uppercase">// ARCHITECT &amp; DEVELOPER</span>
+<div class="h-px w-16 bg-surface-variant"></div>
+</div>
+<h1 class="font-display text-display text-on-surface tracking-tight bg-gradient-to-br from-on-surface via-on-surface to-on-surface-variant bg-clip-text">
+              Nguyễn Hồ Sỹ Phú
+            </h1>
+<p class="font-headline-md text-headline-md text-primary font-normal">
+              Fullstack Developer <span class="text-on-surface-variant font-light">(Fresher / Intern)</span>
+</p>
+</div>
+<!-- Description -->
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+            Xin chào! Mình là Phú — Fullstack Developer định hướng thiết kế hệ thống Backend API hiệu năng cao, Microservices và Event-Driven Architecture. Mục tiêu: Gia nhập đội ngũ thực tế để ứng dụng Java Spring Boot &amp; Next.js vào các hệ thống quy mô lớn.
+          </p>
+<!-- Action Buttons -->
+<div class="flex flex-wrap items-center gap-space-md pt-2">
+<a class="shimmer-btn px-space-lg py-space-md rounded-lg bg-primary-container text-on-primary-container font-label-md text-label-md hover:bg-primary hover:text-on-primary shadow-[0_0_24px_rgba(128,131,255,0.35)] transition-all active:scale-[0.98] flex items-center gap-2" href="#du-an-thuc-chien">
+<span class="material-symbols-outlined text-[18px]">terminal</span>
+              Xem Dự Án Thực Chiến
+            </a>
+<a class="shimmer-btn px-space-lg py-space-md rounded-lg bg-surface-container-high border border-outline-variant/30 text-on-surface hover:bg-surface-variant hover:border-primary/40 font-label-md text-label-md shadow-sm transition-all active:scale-[0.98] flex items-center gap-2" href="#lien-he">
+<span class="material-symbols-outlined text-[18px]">send</span>
+              Liên Hệ Ngay
+            </a>
+<a class="px-space-md py-space-md rounded-lg bg-surface-container text-on-surface-variant hover:text-primary hover:bg-surface-container-high border border-transparent hover:border-outline-variant/30 font-label-md text-label-md transition-all flex items-center gap-2 active:scale-[0.98]" href="https://github.com/NhsPhu" rel="noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[20px]">code</span>
+              GitHub Profile
+            </a>
+</div>
+<!-- Quick Metrics Ribbon (with Counter targets) -->
+<div class="grid grid-cols-3 gap-6 pt-4 w-full max-w-xl">
+<div class="spotlight-card p-space-md rounded-lg bg-surface-container/60 border border-outline-variant/20 backdrop-blur-md">
+<p class="font-display-mobile text-display-mobile text-primary font-semibold flex items-center">
+<span class="counter-val" data-decimals="0" data-target="4">4</span><span>+</span>
+</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Dự án thực tế</p>
+</div>
+<div class="spotlight-card p-space-md rounded-lg bg-surface-container/60 border border-outline-variant/20 backdrop-blur-md">
+<p class="font-display-mobile text-display-mobile text-tertiary font-semibold flex items-center">
+<span class="counter-val" data-decimals="2" data-target="7.29">7.29</span>
+</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">GPA / 10.0 ĐH Gia Định</p>
+</div>
+<div class="spotlight-card p-space-md rounded-lg bg-surface-container/60 border border-outline-variant/20 backdrop-blur-md">
+<p class="font-display-mobile text-display-mobile text-secondary font-semibold flex items-center">
+<span class="counter-val" data-decimals="0" data-target="24">24</span><span>/7</span>
+</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Spring &amp; Next.js Focus</p>
+</div>
+</div>
+</div>
+<!-- Right: System Visual Console / Live Architecture Teaser -->
+<div class="lg:col-span-5 flex flex-col gap-space-md reveal-item" style="transition-delay: 150ms;">
+<div class="spotlight-card relative w-full rounded-xl bg-surface-container-low/95 border border-outline-variant/30 p-space-md shadow-2xl backdrop-blur-xl group">
+<!-- Terminal Header -->
+<div class="flex items-center justify-between pb-space-sm mb-space-sm border-b border-surface-container-highest/60">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-error/90 hover:opacity-100 transition-opacity"></span>
+<span class="w-3 h-3 rounded-full bg-secondary-container/90 hover:opacity-100 transition-opacity"></span>
+<span class="w-3 h-3 rounded-full bg-tertiary/90 hover:opacity-100 transition-opacity"></span>
+<span class="font-code-block text-code-block text-on-surface-variant ml-2 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary/60"></span> sys-arch-profile.sh
+              </span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-tertiary flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-tertiary/10 border border-tertiary/20">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-tertiary"></span>
+</span>
+                LIVE READY
+              </span>
+</div>
+</div>
+<!-- Terminal Content / Code View with Typewriter interactive look -->
+<div class="font-code-block text-code-block text-on-surface space-y-2 py-2">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="flex items-center gap-1">
+<span>$ engineer inspect --id="syphu"</span>
+<span class="inline-block w-2 h-4 bg-primary cursor-blink ml-1"></span>
+</span>
+<span class="text-label-sm text-primary/70">v2.4.0-prod</span>
+</div>
+<p class="text-tertiary-fixed-dim flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+              Verified: Fullstack / Backend Architecture
+            </p>
+<div class="p-3.5 rounded-lg bg-surface-container-lowest/90 border border-surface-container-highest/60 text-on-surface font-code-inline text-code-inline space-y-1.5 shadow-inner">
+<p><span class="text-primary font-medium">name:</span> <span class="text-on-surface">"Nguyễn Hồ Sỹ Phú"</span></p>
+<p><span class="text-primary font-medium">core_stack:</span> <span class="text-secondary">[</span>"Java 17", "Spring Boot 3", "Next.js 16"<span class="text-secondary">]</span></p>
+<p><span class="text-primary font-medium">architecture:</span> <span class="text-secondary">[</span>"Hexagonal", "Modular Monolith", "EDA"<span class="text-secondary">]</span></p>
+<p><span class="text-primary font-medium">queue &amp; cache:</span> <span class="text-secondary">[</span>"RabbitMQ", "Redis", "Elasticsearch"<span class="text-secondary">]</span></p>
+<p><span class="text-primary font-medium">current_mission:</span> <span class="text-tertiary">"Scale Backend APIs for high-concurrency"</span></p>
+</div>
+</div>
+<!-- Mini Live Health Metrics -->
+<div class="grid grid-cols-2 gap-2 pt-space-xs">
+<div class="p-2.5 rounded-lg bg-surface-container/80 border border-outline-variant/15 flex items-center justify-between hover:border-tertiary/30 transition-colors">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Query Optimization</span>
+<span class="font-code-inline text-code-inline text-tertiary font-semibold">-60% Latency</span>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container/80 border border-outline-variant/15 flex items-center justify-between hover:border-secondary/30 transition-colors">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Architecture Pattern</span>
+<span class="font-code-inline text-code-inline text-secondary font-semibold">Hexagonal</span>
+</div>
+</div>
+</div>
+<!-- Secondary Quick Snapshot Card -->
+<div class="spotlight-card p-space-md rounded-xl bg-surface-container-high/60 border border-outline-variant/20 backdrop-blur-md flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container/20 border border-primary/30 flex items-center justify-center text-primary shadow-[0_0_12px_rgba(128,131,255,0.2)]">
+<span class="material-symbols-outlined text-[22px]">school</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-on-surface font-medium">Đại học Gia Định</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Kỹ thuật Phần mềm (2023 - 2026)</p>
+</div>
+</div>
+<span class="font-code-inline text-code-inline text-primary px-2.5 py-1 rounded bg-surface-container border border-primary/30 shadow-[0_0_8px_rgba(192,193,255,0.15)]">GPA 7.29</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 2: ABOUT & CAREER GOALS -->
+<section class="max-w-7xl mx-auto px-6 lg:px-12 py-16 relative z-10" id="ve-toi">
+<!-- Section Title Header -->
+<div class="flex flex-col gap-2 mb-12 reveal-item">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">// 01 // Profile &amp; Ambition</span>
+<div class="h-px w-12 bg-surface-variant"></div>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Về tôi &amp; Mục tiêu sự nghiệp</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Hồ sơ cá nhân và tư duy kỹ thuật định hình năng lực phát triển bền vững.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left: Personal Dossier Card -->
+<div class="lg:col-span-5 flex flex-col gap-4 reveal-item">
+<div class="spotlight-card rounded-xl bg-surface-container-low border border-outline-variant/20 p-space-lg shadow-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-sm border-b border-surface-container-highest/60">
+<span class="font-headline-sm text-headline-sm text-on-surface">Thông Tin Cá Nhân</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-high text-primary border border-primary/20">RESUME DATA</span>
+</div>
+<div class="space-y-4">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">badge</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Họ và tên</span>
+<span class="font-body-md text-body-md text-on-surface font-medium">Nguyễn Hồ Sỹ Phú</span>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">calendar_month</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Ngày sinh</span>
+<span class="font-body-md text-body-md text-on-surface">16/05/2005</span>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">location_on</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Nơi cư ngụ</span>
+<span class="font-body-md text-body-md text-on-surface">Gò Vấp, TP. Hồ Chí Minh</span>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">account_balance</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Học viện đào tạo</span>
+<span class="font-body-md text-body-md text-on-surface font-medium">Đại học Gia Định (2023 - 2026)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Chuyên ngành Kỹ thuật Phần mềm (Software Engineering)</span>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-tertiary text-[20px] mt-0.5">grade</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Điểm tích lũy</span>
+<span class="font-headline-sm text-headline-sm text-tertiary">GPA 7.29 / 10.0</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Academic Quote Highlight -->
+<div class="p-space-md rounded-xl bg-surface-container-high/40 border border-outline-variant/15 backdrop-blur-sm">
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">
+              "When you have reached the bedrock of the abyss, every stride you take is toward the light."
+            </p>
+</div>
+</div>
+<!-- Right: Career Direction & Manifesto -->
+<div class="lg:col-span-7 flex flex-col gap-6 reveal-item" style="transition-delay: 150ms;">
+<!-- Career Statement -->
+<div class="spotlight-card rounded-xl bg-surface-container-low border border-outline-variant/20 p-space-lg shadow-lg flex flex-col gap-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">rocket_launch</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Tuyên Ngôn Nghề Nghiệp</h3>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface leading-relaxed">
+              Tìm vị trí <span class="text-primary font-medium">Intern/Fresher Fullstack hoặc Backend Developer</span> để áp dụng Java Spring Boot, Next.js và kiến trúc Microservices vào dự án thực tế, học hỏi từ đội ngũ kỹ thuật và phát triển tư duy thiết hệ thống backend quy mô lớn. Cam kết học hỏi liên tục và đóng góp giá trị kỹ thuật bền vững.
+            </p>
+</div>
+<!-- Two-Pillar Architecture Direction -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Focus Area -->
+<div class="spotlight-card p-space-lg rounded-xl bg-surface-container border border-outline-variant/20 flex flex-col gap-space-sm">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[20px]">hub</span>
+<h4 class="font-headline-sm text-headline-sm">Tập trung chuyên sâu</h4>
+</div>
+<ul class="space-y-2 pt-2">
+<li class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                  Backend API &amp; Performance
+                </li>
+<li class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                  Microservices Architecture
+                </li>
+<li class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                  Event-Driven Architecture (EDA)
+                </li>
+<li class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                  DevOps Pipeline Automation
+                </li>
+</ul>
+</div>
+<!-- Continuous Research -->
+<div class="spotlight-card p-space-lg rounded-xl bg-surface-container border border-outline-variant/20 flex flex-col gap-space-sm">
+<div class="flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined text-[20px]">biotech</span>
+<h4 class="font-headline-sm text-headline-sm">Đang nghiên cứu mở rộng</h4>
+</div>
+<ul class="space-y-2 pt-2">
+<li class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                  Kubernetes Container Orchestration
+                </li>
+<li class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                  gRPC Inter-Service Communication
+                </li>
+<li class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                  Advanced System Design
+                </li>
+<li class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                  Unit &amp; Integration Testing Standards
+                </li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 3: TECH STACK MATRIX -->
+<section class="max-w-7xl mx-auto px-6 lg:px-12 py-16 relative z-10" id="ky-nang">
+<div class="flex flex-col gap-2 mb-12 reveal-item">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">// 02 // Core Competencies</span>
+<div class="h-px w-12 bg-surface-variant"></div>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Bộ Kỹ Năng Công Nghệ</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Phân loại chi tiết các công nghệ đã thực chiến trong dự án thực tế.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Stack 1: Backend Architecture -->
+<div class="spotlight-card rounded-xl bg-surface-container-low border border-outline-variant/20 p-space-lg flex flex-col justify-between hover:bg-surface-container transition-all reveal-item">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant/20 flex items-center justify-center text-primary shadow-[0_0_12px_rgba(128,131,255,0.15)]">
+<span class="material-symbols-outlined text-[22px]">dns</span>
+</span>
+<span class="font-label-sm text-label-sm text-tertiary">CORE BACKEND</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Backend &amp; Security</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Xây dựng API bảo mật, cấu trúc mô đun vững chắc.</p>
+</div>
+<div class="flex flex-wrap gap-2 pt-2">
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Java 17</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Spring Boot 3</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Spring Security</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">JWT</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Python</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">FastAPI</span>
+</div>
+</div>
+<div class="mt-6 pt-3 border-t border-surface-container-highest/40 flex items-center justify-between text-on-surface-variant font-code-inline text-code-inline">
+<span>Clean Architecture</span>
+<span class="text-primary font-medium">Microservices</span>
+</div>
+</div>
+<!-- Stack 2: Frontend & Mobile -->
+<div class="spotlight-card rounded-xl bg-surface-container-low border border-outline-variant/20 p-space-lg flex flex-col justify-between hover:bg-surface-container transition-all reveal-item" style="transition-delay: 100ms;">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant/20 flex items-center justify-center text-secondary shadow-[0_0_12px_rgba(173,198,255,0.15)]">
+<span class="material-symbols-outlined text-[22px]">devices</span>
+</span>
+<span class="font-label-sm text-label-sm text-secondary">MODERN WEB/APP</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Frontend &amp; Mobile</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Giao diện người dùng phản hồi nhanh, SSR &amp; Native.</p>
+</div>
+<div class="flex flex-wrap gap-2 pt-2">
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Next.js (App Router)</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">React 19</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">TypeScript</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">TailwindCSS</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">React Native</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Kotlin</span>
+</div>
+</div>
+<div class="mt-6 pt-3 border-t border-surface-container-highest/40 flex items-center justify-between text-on-surface-variant font-code-inline text-code-inline">
+<span>Responsive UI</span>
+<span class="text-secondary font-medium">Type Safety</span>
+</div>
+</div>
+<!-- Stack 3: Database & Caching -->
+<div class="spotlight-card rounded-xl bg-surface-container-low border border-outline-variant/20 p-space-lg flex flex-col justify-between hover:bg-surface-container transition-all reveal-item" style="transition-delay: 200ms;">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant/20 flex items-center justify-center text-tertiary shadow-[0_0_12px_rgba(78,222,163,0.15)]">
+<span class="material-symbols-outlined text-[22px]">database</span>
+</span>
+<span class="font-label-sm text-label-sm text-tertiary">PERSISTENCE &amp; QUEUE</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Database &amp; Messaging</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Lưu trữ, hàng đợi bất đồng bộ và tìm kiếm full-text.</p>
+</div>
+<div class="flex flex-wrap gap-2 pt-2">
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">PostgreSQL</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">MySQL</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Redis Cache</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Elasticsearch 8</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">RabbitMQ</span>
+</div>
+</div>
+<div class="mt-6 pt-3 border-t border-surface-container-highest/40 flex items-center justify-between text-on-surface-variant font-code-inline text-code-inline">
+<span>ACID &amp; Caching</span>
+<span class="text-tertiary font-medium">Pub/Sub Brokers</span>
+</div>
+</div>
+<!-- Stack 4: DevOps & Observability -->
+<div class="spotlight-card rounded-xl bg-surface-container-low border border-outline-variant/20 p-space-lg flex flex-col justify-between hover:bg-surface-container transition-all reveal-item">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant/20 flex items-center justify-center text-primary shadow-[0_0_12px_rgba(128,131,255,0.15)]">
+<span class="material-symbols-outlined text-[22px]">monitoring</span>
+</span>
+<span class="font-label-sm text-label-sm text-primary">CI/CD &amp; METRICS</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">DevOps &amp; Observability</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Đóng gói Docker, giám sát hạ tầng và tự động hoá build.</p>
+</div>
+<div class="flex flex-wrap gap-2 pt-2">
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Docker</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">GitHub Actions</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Prometheus</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Grafana</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Git VCS</span>
+</div>
+</div>
+<div class="mt-6 pt-3 border-t border-surface-container-highest/40 flex items-center justify-between text-on-surface-variant font-code-inline text-code-inline">
+<span>Automated Testing</span>
+<span class="text-primary font-medium">System Telemetry</span>
+</div>
+</div>
+<!-- Stack 5: AI, Tools & Engineering Utility -->
+<div class="spotlight-card rounded-xl bg-surface-container-low border border-outline-variant/20 p-space-lg flex flex-col justify-between hover:bg-surface-container transition-all md:col-span-2 lg:col-span-2 reveal-item" style="transition-delay: 150ms;">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant/20 flex items-center justify-center text-secondary shadow-[0_0_12px_rgba(173,198,255,0.15)]">
+<span class="material-symbols-outlined text-[22px]">construction</span>
+</span>
+<span class="font-label-sm text-label-sm text-secondary">DATA &amp; UTILITIES</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">AI, Data &amp; Tooling Integration</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Xử lý dữ liệu phân tích, truyền thông đa phương tiện và tài liệu chuẩn OpenAPI.</p>
+</div>
+<div class="flex flex-wrap gap-2 pt-2">
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Scikit-learn</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Streamlit</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Plotly</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Postman</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Swagger / OpenAPI</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">FFmpeg</span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high font-label-md text-label-md text-on-surface border border-outline-variant/15">Flyway Migration</span>
+</div>
+</div>
+<div class="mt-6 pt-3 border-t border-surface-container-highest/40 flex items-center justify-between text-on-surface-variant font-code-inline text-code-inline">
+<span>Predictive BI Models</span>
+<span class="text-secondary font-medium">API Spec Standards</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 4: FEATURED PROJECTS -->
+<section class="max-w-7xl mx-auto px-6 lg:px-12 py-16 relative z-10" id="du-an-thuc-chien">
+<div class="flex flex-col gap-2 mb-12 reveal-item">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">// 03 // Practical Works</span>
+<div class="h-px w-12 bg-surface-variant"></div>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Dự Án Thực Tế Nổi Bật</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Các hệ thống được thiết kế với chuẩn kiến trúc nghiêm ngặt từ quy mô Monolith đến Microservices.</p>
+</div>
+<!-- PROJECT 1: FLAGSHIP - OMNI MARKETPLACE (with Spotlight effect) -->
+<div class="spotlight-card rounded-2xl bg-surface-container-low border border-outline-variant/30 p-space-lg lg:p-space-xl mb-12 shadow-2xl relative overflow-hidden reveal-item">
+<div class="absolute top-0 right-0 w-80 h-80 bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
+<!-- Flagship Info -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<div class="flex items-center gap-3">
+<span class="px-3 py-1 rounded-full bg-primary text-on-primary font-label-sm text-label-sm font-semibold tracking-wider shadow-[0_0_12px_rgba(192,193,255,0.4)]">FLAGSHIP PROJECT</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">B2B2C E-COMMERCE</span>
+</div>
+<div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">OMNI MARKETPLACE</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2 leading-relaxed">
+                Nền tảng thương mại điện tử đa nhà bán (B2B2C) theo mô hình Shopee/Tiki, xây từ đầu với kiến trúc Modular Monolith kết hợp Hexagonal Architecture nhằm đảm bảo khả năng cô lập nghiệp vụ và mở rộng linh hoạt.
+              </p>
+</div>
+<!-- Deep Architectural Pillars -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+<div class="p-3.5 rounded-lg bg-surface-container border border-outline-variant/20 hover:border-primary/40 transition-colors">
+<span class="font-label-sm text-label-sm text-primary flex items-center gap-1.5 font-semibold">
+<span class="material-symbols-outlined text-[16px]">sync_alt</span> RabbitMQ Queue
+                </span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Xử lý bất đồng bộ các luồng đặt hàng, thanh toán và gửi thông báo đa kênh.</p>
+</div>
+<div class="p-3.5 rounded-lg bg-surface-container border border-outline-variant/20 hover:border-tertiary/40 transition-colors">
+<span class="font-label-sm text-label-sm text-tertiary flex items-center gap-1.5 font-semibold">
+<span class="material-symbols-outlined text-[16px]">search</span> Elasticsearch 8
+                </span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Tìm kiếm toàn văn (Full-Text Search), lọc đa chiều thời gian thực.</p>
+</div>
+<div class="p-3.5 rounded-lg bg-surface-container border border-outline-variant/20 hover:border-secondary/40 transition-colors">
+<span class="font-label-sm text-label-sm text-secondary flex items-center gap-1.5 font-semibold">
+<span class="material-symbols-outlined text-[16px]">speed</span> Redis &amp; Bucket4j
+                </span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Rate limiting bảo vệ API, cơ chế caching tối ưu giảm ~60% truy vấn DB.</p>
+</div>
+<div class="p-3.5 rounded-lg bg-surface-container border border-outline-variant/20 hover:border-on-surface/40 transition-colors">
+<span class="font-label-sm text-label-sm text-on-surface flex items-center gap-1.5 font-semibold">
+<span class="material-symbols-outlined text-[16px]">payments</span> Tích Hợp Thứ Ba
+                </span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Cổng thanh toán VNPay, Đơn vị vận chuyển Giao Hàng Nhanh (GHN), Cloudinary.</p>
+</div>
+</div>
+<!-- Detailed Stack Tags -->
+<div class="flex flex-wrap gap-1.5 pt-2">
+<span class="px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface">Java 17</span>
+<span class="px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface">Spring Boot 3</span>
+<span class="px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface">Next.js 16 (App Router)</span>
+<span class="px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface">React 19</span>
+<span class="px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface">TypeScript 5</span>
+<span class="px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface">TailwindCSS</span>
+<span class="px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface">Ant Design</span>
+<span class="px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface">Flyway Migration</span>
+</div>
+<!-- Observability & Link -->
+<div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-surface-container-highest/40">
+<div class="flex items-center gap-4 text-on-surface-variant font-code-inline text-code-inline">
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span> Prometheus</span>
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span> Grafana</span>
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span> Zipkin Tracing</span>
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-error animate-pulse"></span> Sentry &amp; k6</span>
+</div>
+<a class="shimmer-btn px-4 py-2 rounded-lg bg-primary-container text-on-primary-container hover:bg-primary hover:text-on-primary font-label-md text-label-md transition-all flex items-center gap-2 shadow-[0_0_16px_rgba(128,131,255,0.3)] active:scale-[0.98]" href="https://github.com/NhsPhu/Omni" rel="noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+                Source Code GitHub
+              </a>
+</div>
+</div>
+<!-- Flagship Architecture Graphic / Visualization Card with Live Pulse Stream -->
+<div class="lg:col-span-5 flex flex-col gap-4">
+<div class="rounded-xl bg-surface-container/90 border border-outline-variant/30 p-space-md shadow-xl backdrop-blur-md">
+<div class="flex items-center justify-between pb-3 border-b border-surface-container-highest/60">
+<span class="font-code-block text-code-block text-primary font-medium flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">account_tree</span>
+                omni_system_telemetry.svg
+              </span>
+<span class="font-label-sm text-label-sm text-tertiary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-ping"></span>
+                STABLE 99.98%
+              </span>
+</div>
+<!-- SVG Architectural Diagram with Animated Data Streams -->
+<svg class="w-full h-auto text-on-surface-variant fill-none my-2" viewbox="0 0 400 240">
+<defs>
+<lineargradient id="streamGrad1" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#8083ff"></stop>
+<stop offset="100%" stop-color="#adc6ff"></stop>
+</lineargradient>
+<lineargradient id="streamGrad2" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#8083ff"></stop>
+<stop offset="100%" stop-color="#4edea3"></stop>
+</lineargradient>
+</defs>
+<!-- Background grid lines -->
+<line stroke="currentColor" stroke-opacity="0.1" x1="20" x2="380" y1="60" y2="60"></line>
+<line stroke="currentColor" stroke-opacity="0.1" x1="20" x2="380" y1="120" y2="120"></line>
+<line stroke="currentColor" stroke-opacity="0.1" x1="20" x2="380" y1="180" y2="180"></line>
+<!-- Client Tier -->
+<rect class="fill-surface-container-high stroke-outline-variant/40" height="40" rx="6" stroke-width="1" width="80" x="30" y="30"></rect>
+<text class="fill-current font-sans text-[11px] font-semibold" text-anchor="middle" x="70" y="54">Next.js 16</text>
+<!-- Client to Gateway Pulse Stream -->
+<path class="stream-pulse" d="M110 50 L150 50" stroke="url(#streamGrad1)" stroke-width="2.5"></path>
+<!-- API Gateway / Monolith Core -->
+<rect class="fill-surface-container-highest stroke-primary/50" height="80" rx="8" stroke-width="1.2" width="100" x="150" y="20"></rect>
+<text class="fill-primary font-sans text-[11px] font-bold" text-anchor="middle" x="200" y="45">Spring Boot 3</text>
+<text class="fill-current font-sans text-[9px]" text-anchor="middle" x="200" y="62">Hexagonal Core</text>
+<text class="fill-tertiary font-sans text-[9px]" text-anchor="middle" x="200" y="78">Bucket4j Rate Limit</text>
+<!-- Arrow 2 to Services (Pulsing live streams) -->
+<path class="stream-pulse" d="M250 40 L290 40" stroke="url(#streamGrad1)" stroke-width="2"></path>
+<path class="stream-pulse" d="M250 65 L290 90" stroke="url(#streamGrad2)" stroke-width="2"></path>
+<path class="stream-pulse" d="M250 80 L290 145" stroke="url(#streamGrad1)" stroke-width="2"></path>
+<!-- Services Tier -->
+<rect class="fill-surface-container-high stroke-secondary/40" height="30" rx="5" stroke-width="1" width="85" x="290" y="25"></rect>
+<text class="fill-secondary font-sans text-[10px]" text-anchor="middle" x="332" y="44">Redis Cache</text>
+<rect class="fill-surface-container-high stroke-tertiary/40" height="30" rx="5" stroke-width="1" width="85" x="290" y="75"></rect>
+<text class="fill-tertiary font-sans text-[10px]" text-anchor="middle" x="332" y="94">RabbitMQ</text>
+<rect class="fill-surface-container-high stroke-primary/40" height="30" rx="5" stroke-width="1" width="85" x="290" y="130"></rect>
+<text class="fill-primary font-sans text-[10px]" text-anchor="middle" x="332" y="149">Elasticsearch 8</text>
+<!-- Database Tier with pulse connection -->
+<rect class="fill-surface-container-high stroke-outline-variant/40" height="40" rx="6" stroke-width="1" width="100" x="150" y="140"></rect>
+<text class="fill-current font-sans text-[11px]" text-anchor="middle" x="200" y="165">PostgreSQL 16</text>
+<path class="stream-pulse-reverse" d="M200 100 L200 140" stroke="url(#streamGrad2)" stroke-width="2"></path>
+<!-- Latency Metric Sparkline with pulsing dot -->
+<path d="M30 215 Q 80 200, 140 210 T 260 195 T 370 205" fill="none" stroke="#4edea3" stroke-width="2"></path>
+<circle class="animate-ping" cx="370" cy="205" fill="#4edea3" opacity="0.6" r="5"></circle>
+<circle cx="370" cy="205" fill="#4edea3" r="3.5"></circle>
+<text class="fill-tertiary font-mono text-[10px]" x="30" y="235">Response: 42ms avg</text>
+<text class="fill-on-surface-variant font-mono text-[10px]" text-anchor="end" x="370" y="235">k6 load tested</text>
+</svg>
+</div>
+<!-- CI/CD Status Pill -->
+<div class="p-3 rounded-lg bg-surface-container/90 border border-outline-variant/20 flex items-center justify-between font-label-sm text-label-sm">
+<span class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+                GitHub Actions: Auto Build &amp; Deploy
+              </span>
+<span class="text-primary font-mono flex items-center gap-1 font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
+                PASSED
+              </span>
+</div>
+</div>
+</div>
+</div>
+<!-- SECONDARY PROJECTS GRID (with Spotlight cards) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- PROJECT 2: MOVIE STREAMING SYSTEM -->
+<div class="spotlight-card rounded-xl bg-surface-container-low border border-outline-variant/20 p-space-lg flex flex-col justify-between hover:bg-surface-container transition-all reveal-item">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="px-2.5 py-0.5 rounded bg-secondary-container/30 text-secondary font-label-sm text-label-sm border border-secondary/20">MICROSERVICES</span>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="https://github.com/NhsPhu/MovieFilm" rel="noreferrer" target="_blank" title="Xem GitHub">
+<span class="material-symbols-outlined text-[20px]">open_in_new</span>
+</a>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Movie Streaming System</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+                Hệ thống phát video Adaptive Streaming (HLS) đa nền tảng theo kiến trúc Microservices. Tích hợp giải thuật gợi ý nội dung và quy trình transcode đa phân giải tự động.
+              </p>
+</div>
+<div class="space-y-1.5 text-on-surface-variant font-body-sm text-body-sm pt-2">
+<p class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>FFmpeg transcode 4 mức (1080p → 360p)</span>
+</p>
+<p class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>FastAPI Collaborative Filtering AI recommendation</span>
+</p>
+<p class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>ExoPlayer (Android Kotlin) &amp; Video.js (React 18)</span>
+</p>
+</div>
+</div>
+<div class="pt-6">
+<div class="flex flex-wrap gap-1.5 mb-4">
+<span class="px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface-variant">Spring Boot</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface-variant">Kotlin</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface-variant">Python FastAPI</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface-variant">Docker</span>
+</div>
+<a class="font-label-md text-label-md text-secondary hover:text-primary flex items-center gap-1 transition-colors group" href="https://github.com/NhsPhu/MovieFilm" rel="noreferrer" target="_blank">
+              Xem chi tiết kho lưu trữ <span class="group-hover:translate-x-1 transition-transform">→</span>
+</a>
+</div>
+</div>
+<!-- PROJECT 3: AI SALES ANALYSIS DASHBOARD -->
+<div class="spotlight-card rounded-xl bg-surface-container-low border border-outline-variant/20 p-space-lg flex flex-col justify-between hover:bg-surface-container transition-all reveal-item" style="transition-delay: 100ms;">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="px-2.5 py-0.5 rounded bg-tertiary-container/40 text-tertiary font-label-sm text-label-sm border border-tertiary/20">DATA &amp; AI BI</span>
+<a class="text-on-surface-variant hover:text-tertiary transition-colors" href="https://github.com/NhsPhu/Pro-Sales-Analytics" rel="noreferrer" target="_blank" title="Xem GitHub">
+<span class="material-symbols-outlined text-[20px]">open_in_new</span>
+</a>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">AI Sales Analysis Dashboard</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+                Hệ thống Business Intelligence tự động hóa phân tích dữ liệu bán hàng. Cho phép truy vấn dữ liệu bằng ngôn ngữ tự nhiên và dự báo doanh số chính xác cao.
+              </p>
+</div>
+<div class="space-y-1.5 text-on-surface-variant font-body-sm text-body-sm pt-2">
+<p class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span>ETL Pipeline trích xuất/chuẩn hóa CSV/JSON</span>
+</p>
+<p class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span>Groq API truy vấn ngôn ngữ tự nhiên thông minh</span>
+</p>
+<p class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span>Dự báo Facebook Prophet (sai số MAPE &lt; 8%)</span>
+</p>
+</div>
+</div>
+<div class="pt-6">
+<div class="flex flex-wrap gap-1.5 mb-4">
+<span class="px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface-variant">Streamlit</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface-variant">Plotly</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface-variant">Groq LLM</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface-variant">Prophet</span>
+</div>
+<a class="font-label-md text-label-md text-tertiary hover:text-tertiary-fixed-dim flex items-center gap-1 transition-colors group" href="https://github.com/NhsPhu/Pro-Sales-Analytics" rel="noreferrer" target="_blank">
+              Xem chi tiết kho lưu trữ <span class="group-hover:translate-x-1 transition-transform">→</span>
+</a>
+</div>
+</div>
+<!-- PROJECT 4: BOOKSTORE MANAGER -->
+<div class="spotlight-card rounded-xl bg-surface-container-low border border-outline-variant/20 p-space-lg flex flex-col justify-between hover:bg-surface-container transition-all reveal-item" style="transition-delay: 200ms;">
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="px-2.5 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm border border-outline-variant/20">DESKTOP APP</span>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="https://github.com/NhsPhu/Bookstore" rel="noreferrer" target="_blank" title="Xem GitHub">
+<span class="material-symbols-outlined text-[20px]">open_in_new</span>
+</a>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Bookstore Manager</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+                Ứng dụng desktop quản lý nhà sách toàn diện. Tích hợp thanh toán điểm bán POS, kiểm soát luân chuyển hàng tồn kho và báo cáo thống kê doanh số.
+              </p>
+</div>
+<div class="space-y-1.5 text-on-surface-variant font-body-sm text-body-sm pt-2">
+<p class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span>Bán hàng POS &amp; Cảnh báo tồn kho thời gian thực</span>
+</p>
+<p class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span>CRM khách hàng thân thiết và tích điểm ưu đãi</span>
+</p>
+<p class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span>Phân quyền chi tiết: Admin / Thủ kho / Thu ngân</span>
+</p>
+</div>
+</div>
+<div class="pt-6">
+<div class="flex flex-wrap gap-1.5 mb-4">
+<span class="px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface-variant">Python</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface-variant">CustomTkinter</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant/15 font-code-inline text-code-inline text-on-surface-variant">MySQL</span>
+</div>
+<a class="font-label-md text-label-md text-primary hover:text-primary-container flex items-center gap-1 transition-colors group" href="https://github.com/NhsPhu/Bookstore" rel="noreferrer" target="_blank">
+              Xem chi tiết kho lưu trữ <span class="group-hover:translate-x-1 transition-transform">→</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 5: CONTACT & FOOTER CONNECT -->
+<section class="max-w-7xl mx-auto px-6 lg:px-12 py-20 relative z-10" id="lien-he">
+<div class="spotlight-card rounded-2xl bg-surface-container-low border border-outline-variant/30 p-space-lg lg:p-space-xl relative overflow-hidden shadow-2xl reveal-item">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+<!-- Contact Left: Message & Direct Invitation -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm w-fit border border-primary/20">
+<span class="material-symbols-outlined text-[16px]">handshake</span>
+              GET IN TOUCH
+            </div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">
+              Sẵn sàng gia nhập đội ngũ kỹ thuật
+            </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">
+              Sẵn sàng gia nhập đội ngũ kỹ thuật, học hỏi và đóng góp vào các hệ thống Backend quy mô lớn. Hãy kết nối ngay!
+            </p>
+<div class="flex flex-wrap gap-4 pt-2">
+<!-- Copyable Email Button with Feedback -->
+<div class="relative inline-flex items-center">
+<button class="copy-trigger shimmer-btn px-space-lg py-space-md rounded-lg bg-primary-container text-on-primary-container font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(128,131,255,0.3)] active:scale-[0.98]" data-copy="nguyenhosyphu@gmail.com" type="button">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+<span class="text-copy-target">nguyenhosyphu@gmail.com</span>
+<span class="material-symbols-outlined text-[16px] opacity-70">content_copy</span>
+</button>
+<span class="tooltip-copy absolute -top-8 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded bg-tertiary text-on-tertiary font-label-sm text-label-sm opacity-0 pointer-events-none transition-all shadow-md font-semibold">Đã sao chép!</span>
+</div>
+<!-- Copyable Phone Button with Feedback -->
+<div class="relative inline-flex items-center">
+<button class="copy-trigger shimmer-btn px-space-lg py-space-md rounded-lg bg-surface-container text-on-surface border border-outline-variant/30 font-label-md text-label-md hover:bg-surface-container-high hover:border-primary/40 transition-all flex items-center gap-2 active:scale-[0.98]" data-copy="0337843118" type="button">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="text-copy-target">0337843118</span>
+<span class="material-symbols-outlined text-[16px] opacity-70">content_copy</span>
+</button>
+<span class="tooltip-copy absolute -top-8 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded bg-tertiary text-on-tertiary font-label-sm text-label-sm opacity-0 pointer-events-none transition-all shadow-md font-semibold">Đã sao chép!</span>
+</div>
+</div>
+</div>
+<!-- Contact Right: Connection Grid Cards -->
+<div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+<a class="spotlight-card p-space-md rounded-xl bg-surface-container border border-outline-variant/20 hover:bg-surface-container-high transition-all flex flex-col gap-1 group" href="https://github.com/NhsPhu" rel="noreferrer" target="_blank">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary text-[22px]">terminal</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[16px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">north_east</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-2">GitHub</span>
+<span class="font-code-inline text-code-inline text-on-surface truncate">github.com/NhsPhu</span>
+</a>
+<a class="spotlight-card p-space-md rounded-xl bg-surface-container border border-outline-variant/20 hover:bg-surface-container-high transition-all flex flex-col gap-1 group" href="https://www.facebook.com/Nh.Shyfu/" rel="noreferrer" target="_blank">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-secondary text-[22px]">public</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[16px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">north_east</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-2">Facebook</span>
+<span class="font-code-inline text-code-inline text-on-surface truncate">Nh.Shyfu</span>
+</a>
+<div class="spotlight-card p-space-md rounded-xl bg-surface-container border border-outline-variant/20 flex flex-col gap-1 sm:col-span-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-[20px]">location_on</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Địa điểm làm việc</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface font-medium pt-1">Quận Gò Vấp, TP. Hồ Chí Minh, Việt Nam</span>
+<span class="font-label-sm text-label-sm text-tertiary flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+              Làm việc On-site / Hybrid / Remote
+            </span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- INTERACTIVE SCRIPTS: CANVAS, CURSOR, SPOTLIGHT & TILT, COUNTER, COPY, SCROLL REVEAL -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // 1. Dynamic Particle Mesh Canvas (Interactive Constellation / Particle Flow)
+      const canvas = document.getElementById("bg-canvas");
+      let ctx = null;
+      let width = window.innerWidth;
+      let height = window.innerHeight;
+      let particles = [];
+      const particleCount = Math.min(Math.floor((width * height) / 16000), 75);
+      const connectionDist = 125;
+      const mouseEffectDist = 150;
+
+      let mouse = {
+        x: -1000,
+        y: -1000,
+        targetX: -1000,
+        targetY: -1000
+      };
+
+      if (canvas && !prefersReducedMotion) {
+        ctx = canvas.getContext("2d");
+
+        function resizeCanvas() {
+          width = canvas.width = window.innerWidth;
+          height = canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas, { passive: true });
+
+        class Particle {
+          constructor() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.baseVx = (Math.random() - 0.5) * 0.45;
+            this.baseVy = (Math.random() - 0.5) * 0.45;
+            this.vx = this.baseVx;
+            this.vy = this.baseVy;
+            this.radius = Math.random() * 1.5 + 0.75;
+            this.alpha = Math.random() * 0.4 + 0.2;
+            this.hue = Math.random() > 0.6 ? 230 : (Math.random() > 0.5 ? 175 : 245);
+          }
+
+          update() {
+            // Interact with mouse position
+            const dx = mouse.x - this.x;
+            const dy = mouse.y - this.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < mouseEffectDist) {
+              const force = (mouseEffectDist - dist) / mouseEffectDist;
+              const angle = Math.atan2(dy, dx);
+              // Gentle push away
+              this.vx -= Math.cos(angle) * force * 0.6;
+              this.vy -= Math.sin(angle) * force * 0.6;
+            }
+
+            // Return to base speed gently
+            this.vx += (this.baseVx - this.vx) * 0.05;
+            this.vy += (this.baseVy - this.vy) * 0.05;
+
+            this.x += this.vx;
+            this.y += this.vy;
+
+            // Bounce on edges
+            if (this.x < 0) { this.x = 0; this.vx *= -1; }
+            if (this.x > width) { this.x = width; this.vx *= -1; }
+            if (this.y < 0) { this.y = 0; this.vy *= -1; }
+            if (this.y > height) { this.y = height; this.vy *= -1; }
+          }
+
+          draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `hsla(${this.hue}, 85%, 75%, ${this.alpha})`;
+            ctx.fill();
+          }
+        }
+
+        // Initialize particles
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(new Particle());
+        }
+
+        function renderCanvas() {
+          ctx.clearRect(0, 0, width, height);
+
+          // Update & draw particles
+          for (let i = 0; i < particles.length; i++) {
+            const p1 = particles[i];
+            p1.update();
+            p1.draw();
+
+            // Connect nearby particles
+            for (let j = i + 1; j < particles.length; j++) {
+              const p2 = particles[j];
+              const dx = p1.x - p2.x;
+              const dy = p1.y - p2.y;
+              const dist = Math.sqrt(dx * dx + dy * dy);
+
+              if (dist < connectionDist) {
+                const lineAlpha = (1 - dist / connectionDist) * 0.16;
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.strokeStyle = `rgba(165, 175, 255, ${lineAlpha})`;
+                ctx.lineWidth = 0.8;
+                ctx.stroke();
+              }
+            }
+
+            // Connect to mouse if near
+            const mouseDx = mouse.x - p1.x;
+            const mouseDy = mouse.y - p1.y;
+            const mouseDist = Math.sqrt(mouseDx * mouseDx + mouseDy * mouseDy);
+            if (mouseDist < mouseEffectDist) {
+              const mouseLineAlpha = (1 - mouseDist / mouseEffectDist) * 0.28;
+              ctx.beginPath();
+              ctx.moveTo(p1.x, p1.y);
+              ctx.lineTo(mouse.x, mouse.y);
+              ctx.strokeStyle = `rgba(128, 131, 255, ${mouseLineAlpha})`;
+              ctx.lineWidth = 1;
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      // 2. Custom Cursor Follower & Global Spotlight (Spring Physics / Lerp)
+      const cursorGlow = document.getElementById("cursor-glow");
+      const cursorDot = document.getElementById("cursor-dot");
+
+      let currentCursorX = -1000;
+      let currentCursorY = -1000;
+      let dotX = -1000;
+      let dotY = -1000;
+
+      window.addEventListener("mousemove", (e) => {
+        mouse.targetX = e.clientX;
+        mouse.targetY = e.clientY;
+        if (mouse.x < 0) {
+          mouse.x = e.clientX;
+          mouse.y = e.clientY;
+          currentCursorX = e.clientX;
+          currentCursorY = e.clientY;
+          dotX = e.clientX;
+          dotY = e.clientY;
+        }
+      }, { passive: true });
+
+      window.addEventListener("mouseleave", () => {
+        mouse.targetX = -1000;
+        mouse.targetY = -1000;
+      });
+
+      // Hover expansion on interactive targets
+      const interactiveTargets = document.querySelectorAll('a, button, .spotlight-card, [data-copy]');
+      interactiveTargets.forEach(el => {
+        el.addEventListener("mouseenter", () => {
+          if (cursorDot) cursorDot.classList.add("is-hover");
+        });
+        el.addEventListener("mouseleave", () => {
+          if (cursorDot) cursorDot.classList.remove("is-hover");
+        });
+      });
+
+      // Main Animation Frame loop for cursor lerp & canvas
+      function animationLoop() {
+        if (!prefersReducedMotion) {
+          // Lerp for ambient mouse
+          mouse.x += (mouse.targetX - mouse.x) * 0.12;
+          mouse.y += (mouse.targetY - mouse.y) * 0.12;
+
+          // Lerp for outer glow follower (slower, smoother)
+          currentCursorX += (mouse.targetX - currentCursorX) * 0.085;
+          currentCursorY += (mouse.targetY - currentCursorY) * 0.085;
+          if (cursorGlow) {
+            cursorGlow.style.transform = `translate3d(${currentCursorX}px, ${currentCursorY}px, 0)`;
+          }
+
+          // Lerp for cursor dot (crisp & responsive)
+          dotX += (mouse.targetX - dotX) * 0.32;
+          dotY += (mouse.targetY - dotY) * 0.32;
+          if (cursorDot) {
+            cursorDot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0)`;
+          }
+
+          // Render canvas frame
+          if (ctx) {
+            renderCanvas();
+          }
+        }
+        requestAnimationFrame(animationLoop);
+      }
+      requestAnimationFrame(animationLoop);
+
+      // 3. Mouse-following Spotlight Glow & 3D Tilt on Cards
+      const spotlightCards = document.querySelectorAll('.spotlight-card');
+      spotlightCards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          card.style.setProperty('--mouse-x', `${x}px`);
+          card.style.setProperty('--mouse-y', `${y}px`);
+
+          if (!prefersReducedMotion) {
+            // Subtle 3D tilt calculation
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -3.2; // max ~3.2 deg
+            const rotateY = ((x - centerX) / centerX) * 3.2;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-2.5px)`;
+          }
+        }, { passive: true });
+
+        card.addEventListener('mouseleave', () => {
+          if (!prefersReducedMotion) {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)';
+          }
+        });
+      });
+
+      // 4. Smooth Navigation and Scroll Sync
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          const targetId = this.getAttribute('href');
+          if (targetId && targetId !== '#') {
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+              e.preventDefault();
+              targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
+          }
+        });
+      });
+
+      const pathMap = {
+        've-toi': '#ve-toi',
+        'ky-nang': '#ky-nang',
+        'du-an': '#du-an-thuc-chien',
+        'hoc-van': '#ve-toi',
+        'lien-he': '#lien-he'
+      };
+
+      document.querySelectorAll('header nav a[data-path], header a[data-path="lien-he"]').forEach(link => {
+        const path = link.getAttribute('data-path');
+        if (path && pathMap[path]) {
+          link.setAttribute('href', pathMap[path]);
+          link.addEventListener('click', (e) => {
+            const targetEl = document.querySelector(pathMap[path]);
+            if (targetEl) {
+              e.preventDefault();
+              targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          });
+        }
+      });
+
+      // 5. Scroll Reveal Animation using IntersectionObserver
+      const revealItems = document.querySelectorAll('.reveal-item');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries, obs) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-revealed');
+              obs.unobserve(entry.target);
+            }
+          });
+        }, {
+          threshold: 0.12,
+          rootMargin: "0px 0px -40px 0px"
+        });
+
+        revealItems.forEach(el => observer.observe(el));
+      } else {
+        revealItems.forEach(el => el.classList.add('is-revealed'));
+      }
+
+      // 6. Counter Animation for Quick Stats
+      const counters = document.querySelectorAll('.counter-val');
+      let countersStarted = false;
+
+      function startCounters() {
+        if (countersStarted) return;
+        countersStarted = true;
+
+        counters.forEach(counter => {
+          const target = parseFloat(counter.getAttribute('data-target'));
+          const decimals = parseInt(counter.getAttribute('data-decimals') || '0', 10);
+          const duration = 1600;
+          const startTime = performance.now();
+
+          function updateCounter(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeOutProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+            const currentVal = target * easeOutProgress;
+
+            counter.textContent = currentVal.toFixed(decimals);
+
+            if (progress < 1) {
+              requestAnimationFrame(updateCounter);
+            } else {
+              counter.textContent = target.toFixed(decimals);
+            }
+          }
+          requestAnimationFrame(updateCounter);
+        });
+      }
+
+      const heroSection = document.querySelector('section');
+      if (heroSection && 'IntersectionObserver' in window) {
+        const counterObserver = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            startCounters();
+            counterObserver.disconnect();
+          }
+        }, { threshold: 0.3 });
+        counterObserver.observe(heroSection);
+      } else {
+        startCounters();
+      }
+
+      // 7. Copy to Clipboard with Tooltip Micro-interaction
+      const copyButtons = document.querySelectorAll('.copy-trigger');
+      copyButtons.forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const textToCopy = btn.getAttribute('data-copy');
+          const tooltip = btn.parentElement.querySelector('.tooltip-copy');
+
+          try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              await navigator.clipboard.writeText(textToCopy);
+            } else {
+              const textArea = document.createElement("textarea");
+              textArea.value = textToCopy;
+              document.body.appendChild(textArea);
+              textArea.select();
+              document.execCommand('copy');
+              document.body.removeChild(textArea);
+            }
+
+            if (tooltip) {
+              tooltip.classList.remove('opacity-0');
+              tooltip.classList.add('opacity-100', '-translate-y-1');
+              setTimeout(() => {
+                tooltip.classList.remove('opacity-100', '-translate-y-1');
+                tooltip.classList.add('opacity-0');
+              }, 1800);
+            }
+          } catch (err) {
+            console.error('Lỗi sao chép:', err);
+          }
+        });
+      });
+    });
+  </script>
+</main><footer class="w-full bg-surface-container-low border-t border-surface-container-highest/40 shadow-[0_1px_8px_rgba(0,0,0,0.04)] relative z-10"><div class="max-w-7xl mx-auto px-6 lg:px-12 py-space-xl flex flex-col md:flex-row items-center justify-between gap-space-lg"><div class="flex flex-col items-center md:items-start gap-space-xs"><div class="flex items-center gap-space-sm"><div class="w-6 h-6 rounded bg-surface-container-high border border-outline-variant/30 flex items-center justify-center"><span class="font-label-sm text-label-sm text-primary font-bold">P</span></div><span class="font-headline-sm text-headline-sm text-on-surface">Phu<span class="text-primary">.dev</span></span><span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container border border-tertiary/20 font-code-inline text-code-inline text-tertiary ml-space-xs"><span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>Available for hire</span></div><p class="font-body-sm text-body-sm text-on-surface-variant">Fullstack Software Engineer &amp; System Architect.</p></div><div class="flex items-center gap-space-lg"><a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-space-xs" href="https://github.com/NhsPhu" rel="noreferrer" target="_blank"><span class="material-symbols-outlined text-[18px]">terminal</span>GitHub</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-space-xs" href="mailto:nguyenhosyphu@gmail.com"><span class="material-symbols-outlined text-[18px]">mail</span>Email</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-space-xs" href="https://www.facebook.com/Nh.Shyfu/" rel="noreferrer" target="_blank"><span class="material-symbols-outlined text-[18px]">share</span>Facebook</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors flex items-center gap-space-xs" href="tel:0337843118"><span class="material-symbols-outlined text-[18px]">call</span>Phone</a></div></div><div class="max-w-7xl mx-auto px-6 lg:px-12 py-space-md flex flex-col sm:flex-row items-center justify-between gap-space-sm border-t border-surface-container-highest/30 bg-surface-container-lowest"><span class="font-body-sm text-body-sm text-on-surface-variant">© 2025 Phu.dev. All rights reserved. Crafted with precision.</span><span class="font-code-inline text-code-inline text-on-surface-variant">Designed for high performance.</span></div></footer></body></html>
