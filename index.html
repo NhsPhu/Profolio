@@ -136,6 +136,422 @@
       stroke-dasharray: 6 6;
       animation: pulseFlow 2s linear infinite;
     }
+
+    /* ======================================================
+       3D INTERACTIVE SKILL CUBE (#skills)
+       ====================================================== */
+    .skill-cube-stage {
+      --cube-size: 220px;
+      --cube-half: 110px;
+      --tile-gap: 7px;
+      --face-pad: 7px;
+      --hover-z: 10px;
+      --hover-xy: 4px;
+      --explode-z: 32px;
+      --explode-xy: 10px;
+      position: relative;
+      width: 100%;
+      height: 390px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: pan-y;
+      cursor: grab;
+    }
+
+    @media (min-width: 640px) {
+      .skill-cube-stage {
+        --cube-size: 280px;
+        --cube-half: 140px;
+        --tile-gap: 9px;
+        --face-pad: 9px;
+        --hover-z: 15px;
+        --hover-xy: 6px;
+        --explode-z: 48px;
+        --explode-xy: 15px;
+        height: 540px;
+      }
+    }
+
+    .skill-cube-stage.is-dragging {
+      cursor: grabbing;
+    }
+
+    .skill-cube-ambient {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 9999px;
+      filter: blur(95px);
+      opacity: 0.22;
+      pointer-events: none;
+      transition: background 0.6s ease, opacity 0.5s ease, transform 0.6s ease;
+      background: radial-gradient(circle, var(--active-accent, #f59e0b) 0%, transparent 72%);
+      z-index: 0;
+    }
+
+    @media (min-width: 640px) {
+      .skill-cube-ambient {
+        width: 420px;
+        height: 420px;
+      }
+    }
+
+    .skill-cube-stage.is-exploded .skill-cube-ambient {
+      opacity: 0.3;
+      transform: scale(1.18);
+    }
+
+    .skill-cube-scene {
+      position: relative;
+      width: var(--cube-size);
+      height: var(--cube-size);
+      perspective: 920px;
+      z-index: 1;
+    }
+
+    @media (min-width: 640px) {
+      .skill-cube-scene {
+        perspective: 1120px;
+      }
+    }
+
+    .skill-cube {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .skill-cube-core {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 72px;
+      height: 72px;
+      margin-left: -36px;
+      margin-top: -36px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, rgba(34, 211, 238, 0.55) 0%, rgba(99, 102, 241, 0.28) 45%, transparent 75%);
+      box-shadow: 0 0 36px rgba(34, 211, 238, 0.35), 0 0 64px rgba(99, 102, 241, 0.25);
+      opacity: 0;
+      transform: scale(0.4);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+    }
+
+    .skill-cube-stage.is-exploded .skill-cube-core {
+      opacity: 0.85;
+      transform: scale(1);
+    }
+
+    .skill-face {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: var(--tile-gap);
+      padding: var(--face-pad);
+      transform-style: preserve-3d;
+      pointer-events: none;
+    }
+
+    .skill-face-frame {
+      position: absolute;
+      inset: 3px;
+      border-radius: 14px;
+      background: linear-gradient(145deg, rgba(11, 14, 24, 0.94), rgba(6, 7, 10, 0.97));
+      border: 1px solid rgba(var(--face-rgb), 0.38);
+      box-shadow:
+        inset 0 0 28px rgba(var(--face-rgb), 0.12),
+        0 0 18px rgba(var(--face-rgb), 0.08);
+      transform: translateZ(-2px);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transition: opacity 0.45s ease;
+      pointer-events: auto;
+    }
+
+    .skill-cube-stage.is-exploded .skill-face-frame {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .skill-face-front  { transform: rotateY(0deg) translateZ(var(--cube-half)); }
+    .skill-face-right  { transform: rotateY(90deg) translateZ(var(--cube-half)); }
+    .skill-face-back   { transform: rotateY(180deg) translateZ(var(--cube-half)); }
+    .skill-face-left   { transform: rotateY(-90deg) translateZ(var(--cube-half)); }
+    .skill-face-top    { transform: rotateX(90deg) translateZ(var(--cube-half)); }
+    .skill-face-bottom { transform: rotateX(-90deg) translateZ(var(--cube-half)); }
+
+    .skill-tile {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 6px;
+      border-radius: 12px;
+      background: linear-gradient(155deg, rgba(16, 20, 34, 0.94) 0%, rgba(9, 11, 19, 0.96) 100%);
+      border: 1px solid rgba(var(--face-rgb), 0.32);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 0 16px rgba(var(--face-rgb), 0.09),
+        0 6px 16px rgba(0, 0, 0, 0.45);
+      color: #e2e8f0;
+      text-align: center;
+      cursor: pointer;
+      pointer-events: auto;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform-style: preserve-3d;
+      transform: translate3d(0, 0, 0);
+      transition:
+        transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+    }
+
+    /* Clean dark obsidian backplate for rear-facing tiles while exploded (prevents mirrored text) */
+    .skill-tile::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(155deg, rgba(10, 13, 24, 0.95) 0%, rgba(6, 8, 15, 0.97) 100%);
+      border: 1px solid rgba(var(--face-rgb), 0.3);
+      box-shadow:
+        inset 0 0 18px rgba(var(--face-rgb), 0.14),
+        0 8px 20px rgba(0, 0, 0, 0.5);
+      transform: rotateY(180deg) translateZ(1px);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .skill-cube-stage.is-exploded .skill-tile {
+      backface-visibility: visible;
+      -webkit-backface-visibility: visible;
+    }
+
+    .skill-cube-stage.is-exploded .skill-tile::after {
+      opacity: 1;
+    }
+
+    @media (min-width: 640px) {
+      .skill-tile {
+        gap: 8px;
+        padding: 10px 8px;
+        border-radius: 14px;
+      }
+    }
+
+    .skill-tile-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(var(--face-rgb), 0.14);
+      border: 1px solid rgba(var(--face-rgb), 0.3);
+      color: var(--face-accent);
+      box-shadow: 0 0 12px rgba(var(--face-rgb), 0.16);
+      flex-shrink: 0;
+      pointer-events: none;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    @media (min-width: 640px) {
+      .skill-tile-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+      }
+    }
+
+    .skill-tile-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .skill-tile-icon svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .skill-tile-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      line-height: 1.25;
+      font-weight: 600;
+      color: #f1f5f9;
+      letter-spacing: -0.01em;
+      pointer-events: none;
+      max-width: 100%;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    @media (min-width: 640px) {
+      .skill-tile-name {
+        font-size: 11px;
+      }
+    }
+
+    /* Subtle hover breathing preview on hover-capable devices only */
+    @media (hover: hover) {
+      .skill-cube-stage:not(.is-exploded):not(.is-dragging) .skill-cube:hover .skill-tile {
+        transform: translate3d(
+          calc(var(--dx) * var(--hover-xy)),
+          calc(var(--dy) * var(--hover-xy)),
+          var(--hover-z)
+        );
+        border-color: rgba(var(--face-rgb), 0.55);
+      }
+    }
+
+    /* Exploded state: push tiles out along normal & spread 2x2 apart */
+    .skill-cube-stage.is-exploded .skill-tile {
+      transform: translate3d(
+        calc(var(--dx) * var(--explode-xy)),
+        calc(var(--dy) * var(--explode-xy)),
+        var(--explode-z)
+      );
+      border-color: rgba(var(--face-rgb), 0.5);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        inset 0 0 18px rgba(var(--face-rgb), 0.14),
+        0 10px 26px rgba(0, 0, 0, 0.55),
+        0 0 14px rgba(var(--face-rgb), 0.16);
+    }
+
+    @media (hover: hover) {
+      .skill-cube-stage.is-exploded:not(.is-dragging) .skill-tile:hover {
+        transform: translate3d(
+          calc(var(--dx) * var(--explode-xy)),
+          calc(var(--dy) * var(--explode-xy)),
+          calc(var(--explode-z) + 12px)
+        );
+        border-color: var(--face-accent);
+        background: linear-gradient(155deg, rgba(22, 28, 46, 0.96) 0%, rgba(11, 14, 24, 0.97) 100%);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.16),
+          0 0 22px rgba(var(--face-rgb), 0.35),
+          0 12px 28px rgba(0, 0, 0, 0.65);
+      }
+    }
+
+    .skill-cube-stage.is-exploded .skill-tile.is-selected {
+      transform: translate3d(
+        calc(var(--dx) * var(--explode-xy)),
+        calc(var(--dy) * var(--explode-xy)),
+        calc(var(--explode-z) + 16px)
+      );
+      border-color: var(--face-accent);
+      background: linear-gradient(155deg, rgba(25, 32, 54, 0.98) 0%, rgba(12, 16, 28, 0.98) 100%);
+      box-shadow:
+        0 0 0 1px var(--face-accent),
+        0 0 28px rgba(var(--face-rgb), 0.48),
+        0 14px 32px rgba(0, 0, 0, 0.7);
+    }
+
+    /* 2D Floating Tooltip Overlay (strictly outside 3D transform context) */
+    .skill-tooltip {
+      position: absolute;
+      z-index: 30;
+      width: min(330px, calc(100% - 16px));
+      background: rgba(11, 13, 22, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(var(--tip-rgb, 34, 211, 238), 0.45);
+      border-radius: 16px;
+      padding: 14px 16px;
+      box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.72),
+        0 0 28px rgba(var(--tip-rgb, 34, 211, 238), 0.18);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px) scale(0.96);
+      transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease;
+      cursor: default;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .skill-tooltip.is-open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Face-focus control pills */
+    .skill-face-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 11px;
+      border-radius: 9999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: #cbd5e1;
+      background: rgba(15, 18, 29, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      backdrop-filter: blur(12px);
+      transition: border-color 0.25s ease, color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+      cursor: pointer;
+    }
+
+    .skill-face-pill:hover {
+      color: #ffffff;
+      border-color: rgba(var(--pill-rgb), 0.55);
+      background: rgba(var(--pill-rgb), 0.12);
+    }
+
+    .skill-face-pill.is-active {
+      color: #ffffff;
+      border-color: rgba(var(--pill-rgb), 0.75);
+      background: rgba(var(--pill-rgb), 0.18);
+      box-shadow: 0 0 18px rgba(var(--pill-rgb), 0.22);
+    }
+
+    .skill-face-pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 9999px;
+      background: var(--pill-accent);
+      box-shadow: 0 0 8px var(--pill-accent);
+      flex-shrink: 0;
+    }
+
+    /* Accessibility: respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .skill-tile,
+      .skill-tile::after,
+      .skill-face-frame,
+      .skill-cube-core,
+      .skill-cube-ambient,
+      .skill-tooltip,
+      .skill-face-pill {
+        transition: none !important;
+      }
+    }
   </style>
 </head>
 
@@ -850,10 +1266,10 @@
       </div>
     </section>
 
-    <!-- TECHNICAL SKILLS MATRIX -->
-    <section id="skills" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- TECHNICAL SKILLS MATRIX (3D INTERACTIVE SKILL CUBE) -->
+    <section id="skills" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 overflow-x-clip">
       
-      <div class="text-center max-w-2xl mx-auto mb-12 space-y-3">
+      <div class="text-center max-w-2xl mx-auto mb-8 space-y-3">
         <div class="inline-flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase tracking-wider">
           <i data-lucide="code-2" class="w-4 h-4"></i>
           <span>Production-Tested Toolbelt</span>
@@ -866,201 +1282,132 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- 3D Interactive Skill Cube Centerpiece -->
+      <div class="max-w-4xl mx-auto">
+        <div id="skillCubeStage" class="skill-cube-stage" role="region" aria-label="Khối lập phương kỹ năng 3D tương tác gồm 6 nhóm và 24 công nghệ">
+          
+          <!-- Ambient Accent Aura -->
+          <div id="skillCubeAmbient" class="skill-cube-ambient"></div>
 
-        <!-- SKILL CATEGORY 1: BACKEND ARCHITECTURE -->
-        <div class="spotlight-card rounded-2xl p-6 border border-white/10 space-y-4">
-          <div class="flex items-center gap-3 pb-3 border-b border-white/10">
-            <div class="p-2.5 rounded-xl bg-amber-500/10 text-amber-400">
-              <i data-lucide="server" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <h3 class="font-bold text-white text-base">Backend &amp; Security</h3>
-              <p class="text-xs font-mono text-slate-400">Nền tảng xử lý cốt lõi</p>
+          <!-- 3D Perspective Container -->
+          <div class="skill-cube-scene">
+            <div id="skillCube" class="skill-cube">
+              <div class="skill-cube-core" aria-hidden="true"></div>
+              <!-- 6 faces x 4 tiles rendered dynamically by JS -->
             </div>
           </div>
 
-          <div class="space-y-2.5 text-xs font-mono">
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">Java 17 &amp; Spring Boot 3</span>
-              <span class="text-amber-400 text-[11px]">Primary Core</span>
+          <!-- 2D Floating Tooltip Overlay (strictly outside 3D transform space) -->
+          <div id="skillTooltip" class="skill-tooltip" role="dialog" aria-modal="false" aria-hidden="true" aria-labelledby="skillTooltipTitle">
+            <div class="flex items-center justify-between gap-2 pb-2.5 mb-2.5 border-b border-white/10">
+              <span id="skillTooltipCategory" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold"></span>
+              <button id="skillTooltipClose" type="button" aria-label="Đóng chi tiết kỹ năng" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors">
+                <i data-lucide="x" class="w-4 h-4"></i>
+              </button>
             </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">Spring Security &amp; JWT</span>
-              <span class="text-slate-400 text-[11px]">Auth &amp; RBAC</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">Hexagonal / Modular Architecture</span>
-              <span class="text-indigo-400 text-[11px]">Clean Domain</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">Python &amp; FastAPI</span>
-              <span class="text-cyan-400 text-[11px]">AI Microservices</span>
+
+            <div class="flex items-start gap-3">
+              <div id="skillTooltipIconWrap" class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border"></div>
+              <div class="min-w-0 flex-1 space-y-2">
+                <h3 id="skillTooltipTitle" class="text-sm sm:text-base font-bold text-white leading-snug"></h3>
+                <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-mono">
+                  <span class="text-slate-400">Vai trò:</span>
+                  <span id="skillTooltipLabel" class="px-2 py-0.5 rounded-md font-medium"></span>
+                </div>
+                <div class="pt-1 border-t border-white/[0.07] space-y-1">
+                  <div class="text-[10px] font-mono uppercase tracking-wider text-slate-400">Dự án áp dụng</div>
+                  <div id="skillTooltipProjects" class="text-xs font-mono text-slate-200 leading-relaxed"></div>
+                </div>
+              </div>
             </div>
           </div>
+
         </div>
 
-        <!-- SKILL CATEGORY 2: FRONTEND & MOBILE -->
-        <div class="spotlight-card rounded-2xl p-6 border border-white/10 space-y-4">
-          <div class="flex items-center gap-3 pb-3 border-b border-white/10">
-            <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400">
-              <i data-lucide="layout" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <h3 class="font-bold text-white text-base">Frontend &amp; Mobile</h3>
-              <p class="text-xs font-mono text-slate-400">Giao diện người dùng mượt mà</p>
-            </div>
+        <!-- Minimal Control Bar Below Cube -->
+        <div class="relative z-20 mt-4 sm:mt-6 flex flex-col items-center gap-4">
+          
+          <!-- 6 Face-Focus Pills -->
+          <div id="skillFacePills" class="flex flex-wrap items-center justify-center gap-2" role="group" aria-label="Chọn mặt nhóm kỹ năng">
+            <!-- Rendered dynamically by JS -->
           </div>
 
-          <div class="space-y-2.5 text-xs font-mono">
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">Next.js 16 (App Router)</span>
-              <span class="text-cyan-400 text-[11px]">SSR &amp; Server Actions</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">React 19 &amp; TypeScript 5</span>
-              <span class="text-blue-400 text-[11px]">Type-safe UI</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">TailwindCSS 4 &amp; Ant Design</span>
-              <span class="text-teal-400 text-[11px]">Responsive Design</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">Kotlin Android (MVVM, ExoPlayer)</span>
-              <span class="text-purple-400 text-[11px]">Native Mobile</span>
-            </div>
+          <!-- Toggle Explode / Assemble Button -->
+          <div class="flex items-center justify-center">
+            <button id="skillCubeToggleBtn" type="button" aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-dark-850/90 hover:bg-dark-800 text-cyan-300 hover:text-white border border-cyan-500/35 hover:border-cyan-400/70 font-mono text-xs font-semibold shadow-lg shadow-cyan-950/30 transition-all active:scale-95">
+              <span id="skillCubeToggleIcon" class="inline-flex items-center">
+                <i data-lucide="expand" class="w-3.5 h-3.5"></i>
+              </span>
+              <span id="skillCubeToggleText">Tách khối 3D</span>
+            </button>
           </div>
+
+          <!-- Concise Vietnamese Interaction Hint -->
+          <p class="text-[11px] sm:text-xs font-mono text-slate-400 text-center">
+            Kéo để xoay 360° · Click để tách/gộp · Click ô để xem chi tiết
+          </p>
+
         </div>
-
-        <!-- SKILL CATEGORY 3: EVENT-DRIVEN & DATABASE -->
-        <div class="spotlight-card rounded-2xl p-6 border border-white/10 space-y-4">
-          <div class="flex items-center gap-3 pb-3 border-b border-white/10">
-            <div class="p-2.5 rounded-xl bg-rose-500/10 text-rose-400">
-              <i data-lucide="database" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <h3 class="font-bold text-white text-base">Database &amp; Messaging</h3>
-              <p class="text-xs font-mono text-slate-400">Lưu trữ &amp; Đồng bộ dữ liệu</p>
-            </div>
-          </div>
-
-          <div class="space-y-2.5 text-xs font-mono">
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">RabbitMQ</span>
-              <span class="text-rose-400 text-[11px]">Async Event Broker</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">Redis &amp; Bucket4j</span>
-              <span class="text-rose-300 text-[11px]">Cache &amp; Rate Limit</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">Elasticsearch 8</span>
-              <span class="text-emerald-400 text-[11px]">Full-Text Search</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">PostgreSQL &amp; MySQL</span>
-              <span class="text-blue-400 text-[11px]">RDBMS &amp; ACID</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- SKILL CATEGORY 4: DEVOPS & OBSERVABILITY -->
-        <div class="spotlight-card rounded-2xl p-6 border border-white/10 space-y-4">
-          <div class="flex items-center gap-3 pb-3 border-b border-white/10">
-            <div class="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400">
-              <i data-lucide="activity" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <h3 class="font-bold text-white text-base">DevOps &amp; Observability</h3>
-              <p class="text-xs font-mono text-slate-400">Giám sát &amp; Triển khai</p>
-            </div>
-          </div>
-
-          <div class="space-y-2.5 text-xs font-mono">
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">Docker &amp; Docker Compose</span>
-              <span class="text-cyan-400 text-[11px]">Containerization</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">Prometheus &amp; Grafana</span>
-              <span class="text-amber-400 text-[11px]">Metrics Telemetry</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">Distributed Tracing (Zipkin)</span>
-              <span class="text-purple-400 text-[11px]">Trace ID &amp; Span</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">GitHub Actions &amp; k6</span>
-              <span class="text-emerald-400 text-[11px]">CI/CD &amp; Load Test</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- SKILL CATEGORY 5: INTEGRATIONS & MULTIMEDIA -->
-        <div class="spotlight-card rounded-2xl p-6 border border-white/10 space-y-4">
-          <div class="flex items-center gap-3 pb-3 border-b border-white/10">
-            <div class="p-2.5 rounded-xl bg-purple-500/10 text-purple-400">
-              <i data-lucide="plug" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <h3 class="font-bold text-white text-base">Integration &amp; Media</h3>
-              <p class="text-xs font-mono text-slate-400">Dịch vụ bên thứ ba &amp; Đa phương tiện</p>
-            </div>
-          </div>
-
-          <div class="space-y-2.5 text-xs font-mono">
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">VNPay &amp; GHN APIs</span>
-              <span class="text-emerald-400 text-[11px]">E-commerce Services</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">FFmpeg Media Transcoding</span>
-              <span class="text-rose-400 text-[11px]">HLS Segmentation</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">Groq API &amp; Facebook Prophet</span>
-              <span class="text-indigo-400 text-[11px]">AI &amp; Forecasting</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-white/5 flex justify-between items-center">
-              <span class="text-white font-medium">Cloudinary &amp; Sentry</span>
-              <span class="text-amber-400 text-[11px]">Assets &amp; Errors</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- SKILL CATEGORY 6: LEARNING ROADMAP (CURRENT FOCUS) -->
-        <div class="spotlight-card rounded-2xl p-6 border border-cyan-500/30 space-y-4 bg-cyan-950/20">
-          <div class="flex items-center gap-3 pb-3 border-b border-cyan-500/20">
-            <div class="p-2.5 rounded-xl bg-cyan-500/20 text-cyan-300">
-              <i data-lucide="compass" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <h3 class="font-bold text-white text-base">Đang Nghiên Cứu Sâu</h3>
-              <p class="text-xs font-mono text-cyan-300">Nâng cấp kiến trúc liên tục</p>
-            </div>
-          </div>
-
-          <div class="space-y-2.5 text-xs font-mono">
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-cyan-500/20 flex justify-between items-center">
-              <span class="text-cyan-200 font-medium">Kubernetes (K8s)</span>
-              <span class="text-cyan-400 text-[11px]">Container Orchestration</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-cyan-500/20 flex justify-between items-center">
-              <span class="text-cyan-200 font-medium">gRPC &amp; Protobuf</span>
-              <span class="text-cyan-400 text-[11px]">Inter-service RPC</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-cyan-500/20 flex justify-between items-center">
-              <span class="text-cyan-200 font-medium">System Design Patterns</span>
-              <span class="text-cyan-400 text-[11px]">Saga, Outbox, CQRS</span>
-            </div>
-            <div class="p-2.5 rounded-lg bg-dark-900/80 border border-cyan-500/20 flex justify-between items-center">
-              <span class="text-cyan-200 font-medium">Unit &amp; Integration Testing</span>
-              <span class="text-cyan-400 text-[11px]">JUnit 5, Mockito</span>
-            </div>
-          </div>
-        </div>
-
       </div>
+
+      <!-- Semantic Screen-Reader & SEO List of All 6 Categories and 24 Skills -->
+      <div class="sr-only">
+        <div>
+          <h3>Backend &amp; Security</h3>
+          <ul>
+            <li>Java 17 &amp; Spring Boot 3 — Primary Core — Dự án: Omni Marketplace, Movie Streaming System</li>
+            <li>Spring Security &amp; JWT — Auth &amp; RBAC — Dự án: Omni Marketplace, Movie Streaming System</li>
+            <li>Hexagonal / Modular Architecture — Clean Domain — Dự án: Omni Marketplace</li>
+            <li>Python &amp; FastAPI — AI Microservices — Dự án: Movie Streaming System, AI Sales Analysis, Bookstore Manager</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Frontend &amp; Mobile</h3>
+          <ul>
+            <li>Next.js 16 (App Router) — SSR &amp; Server Actions — Dự án: Omni Marketplace</li>
+            <li>React 19 &amp; TypeScript 5 — Type-safe UI — Dự án: Omni Marketplace, Movie Streaming System</li>
+            <li>TailwindCSS 4 &amp; Ant Design — Responsive Design — Dự án: Omni Marketplace</li>
+            <li>Kotlin Android (MVVM, ExoPlayer) — Native Mobile — Dự án: Movie Streaming System</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Database &amp; Messaging</h3>
+          <ul>
+            <li>RabbitMQ — Async Event Broker — Dự án: Omni Marketplace</li>
+            <li>Redis &amp; Bucket4j — Cache &amp; Rate Limit — Dự án: Omni Marketplace</li>
+            <li>Elasticsearch 8 — Full-Text Search — Dự án: Omni Marketplace</li>
+            <li>PostgreSQL &amp; MySQL — RDBMS &amp; ACID — Dự án: Omni Marketplace (PostgreSQL), Bookstore Manager (MySQL)</li>
+          </ul>
+        </div>
+        <div>
+          <h3>DevOps &amp; Observability</h3>
+          <ul>
+            <li>Docker &amp; Docker Compose — Containerization — Dự án: Omni Marketplace, Movie Streaming System</li>
+            <li>Prometheus &amp; Grafana — Metrics Telemetry — Dự án: Omni Marketplace</li>
+            <li>Distributed Tracing (Zipkin) — Trace ID &amp; Span — Dự án: Omni Marketplace</li>
+            <li>GitHub Actions &amp; k6 — CI/CD &amp; Load Test — Dự án: Omni Marketplace</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Integration &amp; Media</h3>
+          <ul>
+            <li>VNPay &amp; GHN APIs — E-commerce Services — Dự án: Omni Marketplace</li>
+            <li>FFmpeg Media Transcoding — HLS Segmentation — Dự án: Movie Streaming System</li>
+            <li>Groq API &amp; Facebook Prophet — AI &amp; Forecasting — Dự án: AI Sales Analysis Dashboard</li>
+            <li>Cloudinary &amp; Sentry — Assets &amp; Errors — Dự án: Omni Marketplace</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Đang Nghiên Cứu Sâu</h3>
+          <ul>
+            <li>Kubernetes (K8s) — Container Orchestration — Đang nghiên cứu (Roadmap)</li>
+            <li>gRPC &amp; Protobuf — Inter-service RPC — Đang nghiên cứu (Roadmap)</li>
+            <li>System Design Patterns — Saga, Outbox, CQRS — Đang nghiên cứu (Roadmap)</li>
+            <li>Unit &amp; Integration Testing — JUnit 5, Mockito — Đang nghiên cứu (Roadmap)</li>
+          </ul>
+        </div>
+      </div>
+
     </section>
 
     <!-- ABOUT ME & EDUCATION TIMELINE -->
@@ -1794,6 +2141,617 @@
         requestAnimationFrame(animate);
       }
       animate();
+    })();
+
+    // =========================================================================
+    // 3D INTERACTIVE SKILL CUBE (#skills)
+    // Pure CSS 3D + Vanilla JS (zero external 3D libraries)
+    // =========================================================================
+    (function initSkillCube() {
+      const stage = document.getElementById('skillCubeStage');
+      const cube = document.getElementById('skillCube');
+      const ambient = document.getElementById('skillCubeAmbient');
+      const pillsContainer = document.getElementById('skillFacePills');
+      const toggleBtn = document.getElementById('skillCubeToggleBtn');
+      const toggleText = document.getElementById('skillCubeToggleText');
+      const toggleIcon = document.getElementById('skillCubeToggleIcon');
+
+      const tooltip = document.getElementById('skillTooltip');
+      const tooltipClose = document.getElementById('skillTooltipClose');
+      const tooltipCategory = document.getElementById('skillTooltipCategory');
+      const tooltipIconWrap = document.getElementById('skillTooltipIconWrap');
+      const tooltipTitle = document.getElementById('skillTooltipTitle');
+      const tooltipLabel = document.getElementById('skillTooltipLabel');
+      const tooltipProjects = document.getElementById('skillTooltipProjects');
+
+      if (!stage || !cube || !pillsContainer) return;
+
+      const SKILL_FACES = [
+        {
+          id: 'front',
+          faceClass: 'skill-face-front',
+          category: 'Backend & Security',
+          accent: '#f59e0b',
+          rgb: '245, 158, 11',
+          icon: 'server',
+          targetRot: { x: 0, y: 0 },
+          normal: [0, 0, 1],
+          skills: [
+            { name: 'Java 17 & Spring Boot 3', short: 'Spring Boot 3', icon: 'cpu', label: 'Primary Core', projects: 'Omni Marketplace, Movie Streaming System' },
+            { name: 'Spring Security & JWT', short: 'Security & JWT', icon: 'shield-check', label: 'Auth & RBAC', projects: 'Omni Marketplace, Movie Streaming System' },
+            { name: 'Hexagonal / Modular Architecture', short: 'Hexagonal Arch', icon: 'hexagon', label: 'Clean Domain', projects: 'Omni Marketplace' },
+            { name: 'Python & FastAPI', short: 'FastAPI', icon: 'zap', label: 'AI Microservices', projects: 'Movie Streaming System, AI Sales Analysis, Bookstore Manager' }
+          ]
+        },
+        {
+          id: 'right',
+          faceClass: 'skill-face-right',
+          category: 'Frontend & Mobile',
+          accent: '#22d3ee',
+          rgb: '34, 211, 238',
+          icon: 'layout',
+          targetRot: { x: 0, y: -90 },
+          normal: [1, 0, 0],
+          skills: [
+            { name: 'Next.js 16 (App Router)', short: 'Next.js 16', icon: 'globe', label: 'SSR & Server Actions', projects: 'Omni Marketplace' },
+            { name: 'React 19 & TypeScript 5', short: 'React & TS', icon: 'code-2', label: 'Type-safe UI', projects: 'Omni Marketplace, Movie Streaming System' },
+            { name: 'TailwindCSS 4 & Ant Design', short: 'TailwindCSS 4', icon: 'palette', label: 'Responsive Design', projects: 'Omni Marketplace' },
+            { name: 'Kotlin Android (MVVM, ExoPlayer)', short: 'Kotlin Android', icon: 'smartphone', label: 'Native Mobile', projects: 'Movie Streaming System' }
+          ]
+        },
+        {
+          id: 'back',
+          faceClass: 'skill-face-back',
+          category: 'Database & Messaging',
+          accent: '#fb7185',
+          rgb: '251, 113, 133',
+          icon: 'database',
+          targetRot: { x: 0, y: 180 },
+          normal: [0, 0, -1],
+          skills: [
+            { name: 'RabbitMQ', short: 'RabbitMQ', icon: 'shuffle', label: 'Async Event Broker', projects: 'Omni Marketplace' },
+            { name: 'Redis & Bucket4j', short: 'Redis & Bucket4j', icon: 'flame', label: 'Cache & Rate Limit', projects: 'Omni Marketplace' },
+            { name: 'Elasticsearch 8', short: 'Elasticsearch 8', icon: 'search', label: 'Full-Text Search', projects: 'Omni Marketplace' },
+            { name: 'PostgreSQL & MySQL', short: 'Postgres & MySQL', icon: 'database', label: 'RDBMS & ACID', projects: 'Omni Marketplace (PostgreSQL), Bookstore Manager (MySQL)' }
+          ]
+        },
+        {
+          id: 'left',
+          faceClass: 'skill-face-left',
+          category: 'DevOps & Observability',
+          accent: '#818cf8',
+          rgb: '129, 140, 248',
+          icon: 'activity',
+          targetRot: { x: 0, y: 90 },
+          normal: [-1, 0, 0],
+          skills: [
+            { name: 'Docker & Docker Compose', short: 'Docker', icon: 'box', label: 'Containerization', projects: 'Omni Marketplace, Movie Streaming System' },
+            { name: 'Prometheus & Grafana', short: 'Prometheus', icon: 'bar-chart-3', label: 'Metrics Telemetry', projects: 'Omni Marketplace' },
+            { name: 'Distributed Tracing (Zipkin)', short: 'Zipkin Tracing', icon: 'git-branch', label: 'Trace ID & Span', projects: 'Omni Marketplace' },
+            { name: 'GitHub Actions & k6', short: 'CI/CD & k6', icon: 'git-merge', label: 'CI/CD & Load Test', projects: 'Omni Marketplace' }
+          ]
+        },
+        {
+          id: 'top',
+          faceClass: 'skill-face-top',
+          category: 'Integration & Media',
+          accent: '#c084fc',
+          rgb: '192, 132, 252',
+          icon: 'plug',
+          targetRot: { x: -90, y: 0 },
+          normal: [0, -1, 0],
+          skills: [
+            { name: 'VNPay & GHN APIs', short: 'VNPay & GHN', icon: 'credit-card', label: 'E-commerce Services', projects: 'Omni Marketplace' },
+            { name: 'FFmpeg Media Transcoding', short: 'FFmpeg HLS', icon: 'film', label: 'HLS Segmentation', projects: 'Movie Streaming System' },
+            { name: 'Groq API & Facebook Prophet', short: 'Groq & Prophet', icon: 'sparkles', label: 'AI & Forecasting', projects: 'AI Sales Analysis Dashboard' },
+            { name: 'Cloudinary & Sentry', short: 'Cloudinary/Sentry', icon: 'cloud', label: 'Assets & Errors', projects: 'Omni Marketplace' }
+          ]
+        },
+        {
+          id: 'bottom',
+          faceClass: 'skill-face-bottom',
+          category: 'Đang Nghiên Cứu Sâu',
+          accent: '#38bdf8',
+          rgb: '56, 189, 248',
+          icon: 'compass',
+          targetRot: { x: 90, y: 0 },
+          normal: [0, 1, 0],
+          skills: [
+            { name: 'Kubernetes (K8s)', short: 'Kubernetes', icon: 'network', label: 'Container Orchestration', projects: 'Đang nghiên cứu (Roadmap)' },
+            { name: 'gRPC & Protobuf', short: 'gRPC', icon: 'radio', label: 'Inter-service RPC', projects: 'Đang nghiên cứu (Roadmap)' },
+            { name: 'System Design Patterns', short: 'System Design', icon: 'layers', label: 'Saga, Outbox, CQRS', projects: 'Đang nghiên cứu (Roadmap)' },
+            { name: 'Unit & Integration Testing', short: 'JUnit & Mockito', icon: 'check-circle-2', label: 'JUnit 5, Mockito', projects: 'Đang nghiên cứu (Roadmap)' }
+          ]
+        }
+      ];
+
+      const TILE_OFFSETS = [
+        { dx: -1, dy: -1 },
+        { dx: 1, dy: -1 },
+        { dx: -1, dy: 1 },
+        { dx: 1, dy: 1 }
+      ];
+
+      // Reduced motion preference
+      const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let prefersReducedMotion = reducedMotionQuery.matches;
+      if (reducedMotionQuery.addEventListener) {
+        reducedMotionQuery.addEventListener('change', (e) => {
+          prefersReducedMotion = e.matches;
+        });
+      }
+
+      // Build 6 faces x 4 tiles + 6 face-focus pills
+      const tileMap = new Map();
+      const pillButtons = [];
+
+      SKILL_FACES.forEach((face, faceIndex) => {
+        const faceEl = document.createElement('div');
+        faceEl.className = `skill-face ${face.faceClass}`;
+        faceEl.dataset.faceId = face.id;
+        faceEl.style.setProperty('--face-accent', face.accent);
+        faceEl.style.setProperty('--face-rgb', face.rgb);
+
+        const frameEl = document.createElement('div');
+        frameEl.className = 'skill-face-frame';
+        frameEl.setAttribute('aria-hidden', 'true');
+        faceEl.appendChild(frameEl);
+
+        face.skills.forEach((skill, tileIndex) => {
+          const tileKey = `${faceIndex}-${tileIndex}`;
+          const offset = TILE_OFFSETS[tileIndex];
+          const tileEl = document.createElement('button');
+          tileEl.type = 'button';
+          tileEl.className = 'skill-tile';
+          tileEl.dataset.tileKey = tileKey;
+          tileEl.dataset.faceIndex = String(faceIndex);
+          tileEl.dataset.tileIndex = String(tileIndex);
+          tileEl.setAttribute('aria-label', `${skill.name} (${face.category})`);
+          tileEl.style.setProperty('--dx', String(offset.dx));
+          tileEl.style.setProperty('--dy', String(offset.dy));
+          tileEl.innerHTML = `
+            <span class="skill-tile-icon" aria-hidden="true">
+              <i data-lucide="${skill.icon}"></i>
+            </span>
+            <span class="skill-tile-name">${skill.short}</span>
+          `;
+          tileEl.addEventListener('click', (e) => {
+            // Support keyboard activation (Enter / Space) without double-firing on pointer clicks
+            if (e.detail === 0) {
+              if (!isExploded) {
+                setExploded(true);
+              } else {
+                openTooltip(tileKey);
+              }
+            }
+          });
+          faceEl.appendChild(tileEl);
+          tileMap.set(tileKey, { el: tileEl, face, skill, faceIndex, tileIndex });
+        });
+
+        cube.appendChild(faceEl);
+
+        // Create corresponding face-focus pill
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = 'skill-face-pill';
+        pill.dataset.faceIndex = String(faceIndex);
+        pill.style.setProperty('--pill-accent', face.accent);
+        pill.style.setProperty('--pill-rgb', face.rgb);
+        pill.innerHTML = `
+          <span class="skill-face-pill-dot" aria-hidden="true"></span>
+          <i data-lucide="${face.icon}" class="w-3.5 h-3.5" style="color: ${face.accent};"></i>
+          <span>${face.category}</span>
+        `;
+        pill.addEventListener('click', () => focusFace(faceIndex));
+        pillsContainer.appendChild(pill);
+        pillButtons.push(pill);
+      });
+
+      // Render Lucide icons for newly injected cube tiles & pills
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+      }
+
+      // Cube rotation & interaction state
+      let rotX = -20;
+      let rotY = 28;
+      let velX = 0;
+      let velY = 0;
+      let isExploded = false;
+      let selectedTileKey = null;
+      let activeFaceIndex = 0;
+
+      // Pointer drag state
+      let isPointerDown = false;
+      let activePointerId = null;
+      let isDragging = false;
+      let lastX = 0;
+      let lastY = 0;
+      let travelDist = 0;
+      let lastInteractionTime = 0;
+      let downTileKey = null;
+      let downInsideCube = false;
+
+      // Smooth face-focus animation state
+      let focusAnim = null;
+
+      function shortestAngleDelta(current, target) {
+        let delta = ((target - current) % 360 + 540) % 360 - 180;
+        return delta;
+      }
+
+      function focusFace(faceIndex) {
+        const face = SKILL_FACES[faceIndex];
+        if (!face) return;
+
+        velX = 0;
+        velY = 0;
+        lastInteractionTime = performance.now();
+
+        const targetX = rotX + shortestAngleDelta(rotX, face.targetRot.x);
+        const targetY = rotY + shortestAngleDelta(rotY, face.targetRot.y);
+
+        if (prefersReducedMotion) {
+          rotX = targetX;
+          rotY = targetY;
+          focusAnim = null;
+          applyCubeTransform();
+          updateActiveFaceUI();
+          return;
+        }
+
+        focusAnim = {
+          startX: rotX,
+          startY: rotY,
+          targetX,
+          targetY,
+          startTime: performance.now(),
+          duration: 620
+        };
+      }
+
+      function updateToggleButtonUI() {
+        if (!toggleBtn || !toggleText || !toggleIcon) return;
+        toggleBtn.setAttribute('aria-pressed', String(isExploded));
+        toggleText.textContent = isExploded ? 'Gộp khối 3D' : 'Tách khối 3D';
+        toggleIcon.innerHTML = isExploded
+          ? '<i data-lucide="minimize-2" class="w-3.5 h-3.5"></i>'
+          : '<i data-lucide="expand" class="w-3.5 h-3.5"></i>';
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.lucide.createIcons();
+        }
+      }
+
+      function setExploded(nextState) {
+        if (isExploded === nextState) return;
+        isExploded = nextState;
+        stage.classList.toggle('is-exploded', isExploded);
+        if (!isExploded) {
+          closeTooltip();
+        }
+        lastInteractionTime = performance.now();
+        updateToggleButtonUI();
+      }
+
+      function positionTooltip(tileEl) {
+        if (!tooltip) return;
+        const stageRect = stage.getBoundingClientRect();
+        const isMobile = window.innerWidth < 640;
+
+        if (isMobile || !tileEl) {
+          tooltip.style.left = '50%';
+          tooltip.style.top = 'auto';
+          tooltip.style.bottom = '8px';
+          tooltip.style.transform = tooltip.classList.contains('is-open')
+            ? 'translateX(-50%) translateY(0) scale(1)'
+            : 'translateX(-50%) translateY(8px) scale(0.96)';
+          return;
+        }
+
+        // Reset mobile bottom positioning on desktop
+        tooltip.style.bottom = 'auto';
+        tooltip.style.transform = '';
+
+        const tileRect = tileEl.getBoundingClientRect();
+        const tipWidth = tooltip.offsetWidth || 320;
+        const tipHeight = tooltip.offsetHeight || 190;
+        const margin = 12;
+
+        const tileCenterX = tileRect.left - stageRect.left + tileRect.width / 2;
+        const tileCenterY = tileRect.top - stageRect.top + tileRect.height / 2;
+
+        // Place tooltip on the opposite side of the tile so it doesn't obscure it
+        let left = tileCenterX < stageRect.width / 2
+          ? (tileRect.right - stageRect.left) + 16
+          : (tileRect.left - stageRect.left) - tipWidth - 16;
+
+        // Fallback if still cramped horizontally
+        if (left < margin || left + tipWidth > stageRect.width - margin) {
+          left = tileCenterX - tipWidth / 2;
+        }
+
+        let top = tileCenterY - tipHeight / 2;
+
+        // Clamp strictly within stage boundaries
+        left = Math.max(margin, Math.min(stageRect.width - tipWidth - margin, left));
+        top = Math.max(margin, Math.min(stageRect.height - tipHeight - margin, top));
+
+        tooltip.style.left = `${Math.round(left)}px`;
+        tooltip.style.top = `${Math.round(top)}px`;
+      }
+
+      function openTooltip(tileKey) {
+        const entry = tileMap.get(tileKey);
+        if (!entry || !tooltip) return;
+
+        // Clear previous tile selection
+        if (selectedTileKey && tileMap.has(selectedTileKey)) {
+          tileMap.get(selectedTileKey).el.classList.remove('is-selected');
+        }
+
+        selectedTileKey = tileKey;
+        entry.el.classList.add('is-selected');
+
+        const { face, skill } = entry;
+        tooltip.style.setProperty('--tip-rgb', face.rgb);
+
+        tooltipCategory.style.background = `rgba(${face.rgb}, 0.16)`;
+        tooltipCategory.style.color = face.accent;
+        tooltipCategory.style.border = `1px solid rgba(${face.rgb}, 0.35)`;
+        tooltipCategory.innerHTML = `<i data-lucide="${face.icon}" class="w-3.5 h-3.5"></i><span>${face.category}</span>`;
+
+        tooltipIconWrap.style.background = `rgba(${face.rgb}, 0.14)`;
+        tooltipIconWrap.style.borderColor = `rgba(${face.rgb}, 0.35)`;
+        tooltipIconWrap.style.color = face.accent;
+        tooltipIconWrap.innerHTML = `<i data-lucide="${skill.icon}" class="w-5 h-5"></i>`;
+
+        tooltipTitle.textContent = skill.name;
+
+        tooltipLabel.style.background = `rgba(${face.rgb}, 0.14)`;
+        tooltipLabel.style.color = face.accent;
+        tooltipLabel.style.border = `1px solid rgba(${face.rgb}, 0.28)`;
+        tooltipLabel.textContent = skill.label;
+
+        tooltipProjects.textContent = skill.projects;
+
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.lucide.createIcons();
+        }
+
+        tooltip.setAttribute('aria-hidden', 'false');
+        tooltip.classList.add('is-open');
+        positionTooltip(entry.el);
+        lastInteractionTime = performance.now();
+      }
+
+      function closeTooltip() {
+        if (!tooltip) return;
+        if (selectedTileKey && tileMap.has(selectedTileKey)) {
+          tileMap.get(selectedTileKey).el.classList.remove('is-selected');
+        }
+        selectedTileKey = null;
+        tooltip.classList.remove('is-open');
+        tooltip.setAttribute('aria-hidden', 'true');
+        if (window.innerWidth < 640) {
+          tooltip.style.transform = 'translateX(-50%) translateY(8px) scale(0.96)';
+        }
+        lastInteractionTime = performance.now();
+      }
+
+      function updateActiveFaceUI() {
+        const rx = (rotX * Math.PI) / 180;
+        const ry = (rotY * Math.PI) / 180;
+        const cosX = Math.cos(rx);
+        const sinX = Math.sin(rx);
+        const cosY = Math.cos(ry);
+        const sinY = Math.sin(ry);
+
+        let bestIdx = 0;
+        let bestZ = -Infinity;
+
+        for (let i = 0; i < SKILL_FACES.length; i++) {
+          const [nx, ny, nz] = SKILL_FACES[i].normal;
+          // Apply rotateY(ry) then rotateX(rx) matching CSS transform order
+          const z1 = -nx * sinY + nz * cosY;
+          const z2 = ny * sinX + z1 * cosX;
+          if (z2 > bestZ) {
+            bestZ = z2;
+            bestIdx = i;
+          }
+        }
+
+        if (bestIdx !== activeFaceIndex) {
+          activeFaceIndex = bestIdx;
+          const activeFace = SKILL_FACES[activeFaceIndex];
+          if (ambient) {
+            ambient.style.setProperty('--active-accent', activeFace.accent);
+          }
+          pillButtons.forEach((btn, idx) => {
+            btn.classList.toggle('is-active', idx === activeFaceIndex);
+          });
+        }
+      }
+
+      function applyCubeTransform() {
+        cube.style.transform = `rotateX(${rotX.toFixed(3)}deg) rotateY(${rotY.toFixed(3)}deg)`;
+      }
+
+      // Pointer events for 360-degree drag + click vs drag (<5px) discrimination
+      stage.addEventListener('pointerdown', (e) => {
+        if (e.button !== undefined && e.button !== 0 && e.pointerType === 'mouse') return;
+        if (tooltip && tooltip.contains(e.target)) return;
+
+        isPointerDown = true;
+        activePointerId = e.pointerId;
+        isDragging = false;
+        lastX = e.clientX;
+        lastY = e.clientY;
+        travelDist = 0;
+        velX = 0;
+        velY = 0;
+        focusAnim = null;
+
+        const tileHit = e.target.closest('.skill-tile');
+        downTileKey = tileHit ? tileHit.dataset.tileKey : null;
+        downInsideCube = Boolean(tileHit || e.target.closest('.skill-cube'));
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        if (!isPointerDown || e.pointerId !== activePointerId) return;
+
+        const dx = e.clientX - lastX;
+        const dy = e.clientY - lastY;
+        lastX = e.clientX;
+        lastY = e.clientY;
+
+        travelDist += Math.hypot(dx, dy);
+
+        if (!isDragging && travelDist >= 5) {
+          isDragging = true;
+          stage.classList.add('is-dragging');
+        }
+
+        if (isDragging) {
+          const sensitivity = 0.42;
+          const deltaY = dx * sensitivity;
+          const deltaX = -dy * sensitivity;
+
+          rotY += deltaY;
+          rotX += deltaX;
+
+          // Clamp velocity for silky post-release inertia
+          velY = Math.max(-10, Math.min(10, deltaY));
+          velX = Math.max(-10, Math.min(10, deltaX));
+
+          lastInteractionTime = performance.now();
+          applyCubeTransform();
+          updateActiveFaceUI();
+        }
+      });
+
+      function endPointer(e, isCancel) {
+        if (!isPointerDown || e.pointerId !== activePointerId) return;
+
+        const wasClick = !isCancel && !isDragging && travelDist < 5;
+        const clickedTileKey = downTileKey;
+        const clickedCube = downInsideCube;
+
+        isPointerDown = false;
+        activePointerId = null;
+        isDragging = false;
+        downTileKey = null;
+        downInsideCube = false;
+        stage.classList.remove('is-dragging');
+        lastInteractionTime = performance.now();
+
+        if (wasClick) {
+          velX = 0;
+          velY = 0;
+          if (!isExploded) {
+            if (clickedCube) {
+              setExploded(true);
+            }
+          } else {
+            if (clickedTileKey) {
+              openTooltip(clickedTileKey);
+            } else if (selectedTileKey) {
+              // Clicking empty stage dismisses open tooltip first
+              closeTooltip();
+            } else {
+              // Clicking empty stage when no tooltip is open collapses the cube
+              setExploded(false);
+            }
+          }
+        }
+      }
+
+      window.addEventListener('pointerup', (e) => endPointer(e, false));
+      window.addEventListener('pointercancel', (e) => endPointer(e, true));
+
+      // Toggle button click
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          setExploded(!isExploded);
+        });
+      }
+
+      // Close tooltip button & ESC key
+      if (tooltipClose) {
+        tooltipClose.addEventListener('click', (e) => {
+          e.stopPropagation();
+          closeTooltip();
+        });
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && selectedTileKey) {
+          closeTooltip();
+        }
+      });
+
+      window.addEventListener('resize', () => {
+        if (selectedTileKey && tileMap.has(selectedTileKey)) {
+          positionTooltip(tileMap.get(selectedTileKey).el);
+        }
+      });
+
+      // Initialize active face highlight
+      activeFaceIndex = -1;
+      applyCubeTransform();
+      updateActiveFaceUI();
+
+      // Animation loop: smooth face-focus, inertia damping, and gentle idle auto-rotation
+      let lastFrameTime = performance.now();
+      function tick(now) {
+        const dt = Math.min(40, now - lastFrameTime);
+        const dtScale = dt / 16.6667;
+        lastFrameTime = now;
+
+        let changed = false;
+
+        if (focusAnim) {
+          const progress = Math.min(1, (now - focusAnim.startTime) / focusAnim.duration);
+          const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+          rotX = focusAnim.startX + (focusAnim.targetX - focusAnim.startX) * eased;
+          rotY = focusAnim.startY + (focusAnim.targetY - focusAnim.startY) * eased;
+          changed = true;
+          if (progress >= 1) {
+            focusAnim = null;
+          }
+        } else if (!isPointerDown && !isDragging) {
+          // Apply inertia damping after drag release
+          if (!prefersReducedMotion && (Math.abs(velX) > 0.01 || Math.abs(velY) > 0.01)) {
+            rotX += velX * dtScale;
+            rotY += velY * dtScale;
+            const damping = Math.pow(0.93, dtScale);
+            velX *= damping;
+            velY *= damping;
+            if (Math.abs(velX) <= 0.01) velX = 0;
+            if (Math.abs(velY) <= 0.01) velY = 0;
+            changed = true;
+          } else if (!prefersReducedMotion && !selectedTileKey) {
+            // Gently resume smooth continuous auto-rotation after idle
+            const idleMs = now - lastInteractionTime;
+            if (idleMs > 900) {
+              const ramp = Math.min(1, (idleMs - 900) / 1400);
+              const speedFactor = isExploded ? 0.65 : 1;
+              rotY += 0.24 * ramp * speedFactor * dtScale;
+              rotX += Math.sin(now * 0.00055) * 0.045 * ramp * speedFactor * dtScale;
+              changed = true;
+            }
+          }
+        }
+
+        if (changed) {
+          applyCubeTransform();
+          updateActiveFaceUI();
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      requestAnimationFrame(tick);
     })();
   </script>
 </body>
