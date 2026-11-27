@@ -143,13 +143,14 @@
     .skill-cube-stage {
       --cube-size: 220px;
       --cube-half: 110px;
-      --tile-gap: 7px;
-      --face-pad: 7px;
+      --tile-size: 99px;
+      --tile-offset: 53px;
       --hover-z: 10px;
       --hover-xy: 4px;
-      --scatter-xy: 19px;
-      --scatter-z: 30px;
-      --explode-scale: 0.82;
+      --sphere-radius: 148px;
+      --explode-scale: 0.58;
+      --hover-scale: 0.84;
+      --select-scale: 0.88;
       position: relative;
       width: 100%;
       height: 410px;
@@ -166,14 +167,15 @@
       .skill-cube-stage {
         --cube-size: 280px;
         --cube-half: 140px;
-        --tile-gap: 9px;
-        --face-pad: 9px;
+        --tile-size: 126px;
+        --tile-offset: 67.5px;
         --hover-z: 15px;
         --hover-xy: 6px;
-        --scatter-xy: 38px;
-        --scatter-z: 56px;
-        --explode-scale: 0.86;
-        height: 560px;
+        --sphere-radius: 238px;
+        --explode-scale: 0.68;
+        --hover-scale: 0.9;
+        --select-scale: 0.94;
+        height: 580px;
       }
     }
 
@@ -250,18 +252,6 @@
       transform: scale(1);
     }
 
-    .skill-face {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(2, 1fr);
-      gap: var(--tile-gap);
-      padding: var(--face-pad);
-      transform-style: preserve-3d;
-      pointer-events: none;
-    }
-
     .skill-face-frame {
       position: absolute;
       inset: 3px;
@@ -271,7 +261,6 @@
       box-shadow:
         inset 0 0 28px rgba(var(--face-rgb), 0.12),
         0 0 18px rgba(var(--face-rgb), 0.08);
-      transform: translateZ(-2px);
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
       transition: opacity 0.45s ease;
@@ -283,15 +272,21 @@
       pointer-events: none;
     }
 
-    .skill-face-front  { transform: rotateY(0deg) translateZ(var(--cube-half)); }
-    .skill-face-right  { transform: rotateY(90deg) translateZ(var(--cube-half)); }
-    .skill-face-back   { transform: rotateY(180deg) translateZ(var(--cube-half)); }
-    .skill-face-left   { transform: rotateY(-90deg) translateZ(var(--cube-half)); }
-    .skill-face-top    { transform: rotateX(90deg) translateZ(var(--cube-half)); }
-    .skill-face-bottom { transform: rotateX(-90deg) translateZ(var(--cube-half)); }
+    .skill-face-front  { transform: rotateY(0deg) translateZ(calc(var(--cube-half) - 2px)); }
+    .skill-face-right  { transform: rotateY(90deg) translateZ(calc(var(--cube-half) - 2px)); }
+    .skill-face-back   { transform: rotateY(180deg) translateZ(calc(var(--cube-half) - 2px)); }
+    .skill-face-left   { transform: rotateY(-90deg) translateZ(calc(var(--cube-half) - 2px)); }
+    .skill-face-top    { transform: rotateX(90deg) translateZ(calc(var(--cube-half) - 2px)); }
+    .skill-face-bottom { transform: rotateX(-90deg) translateZ(calc(var(--cube-half) - 2px)); }
 
     .skill-tile {
-      position: relative;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: var(--tile-size);
+      height: var(--tile-size);
+      margin-left: calc(var(--tile-size) / -2);
+      margin-top: calc(var(--tile-size) / -2);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -312,9 +307,17 @@
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
       transform-style: preserve-3d;
-      transform: translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+      transform:
+        rotateY(var(--cry))
+        rotateX(var(--crx))
+        translate3d(
+          calc(var(--dx) * var(--tile-offset)),
+          calc(var(--dy) * var(--tile-offset)),
+          var(--cube-half)
+        )
+        scale(1);
       transition:
-        transform 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
         border-color 0.25s ease,
         box-shadow 0.25s ease,
         background 0.25s ease;
@@ -322,20 +325,18 @@
 
     @keyframes skillTileBob {
       0%, 100% { translate: 0px 0px 0px; }
-      50% { translate: 0px -5px 6px; }
+      50% { translate: 0px -4px 4px; }
     }
 
-    /* Clean dark obsidian backplate for rear-facing tiles while exploded (prevents mirrored text) */
+    /* Translucent obsidian backplate for far-hemisphere sphere tiles (prevents mirrored text) */
     .skill-tile::after {
       content: '';
       position: absolute;
       inset: 0;
       border-radius: inherit;
-      background: linear-gradient(155deg, rgba(10, 13, 24, 0.95) 0%, rgba(6, 8, 15, 0.97) 100%);
-      border: 1px solid rgba(var(--face-rgb), 0.3);
-      box-shadow:
-        inset 0 0 18px rgba(var(--face-rgb), 0.14),
-        0 8px 20px rgba(0, 0, 0, 0.5);
+      background: linear-gradient(155deg, rgba(10, 13, 24, 0.56) 0%, rgba(6, 8, 15, 0.64) 100%);
+      border: 1px solid rgba(var(--face-rgb), 0.22);
+      box-shadow: inset 0 0 14px rgba(var(--face-rgb), 0.1);
       transform: rotateY(180deg) translateZ(1px);
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
@@ -425,32 +426,26 @@
     @media (hover: hover) {
       .skill-cube-stage:not(.is-exploded):not(.is-dragging) .skill-cube:hover .skill-tile {
         transform:
+          rotateY(var(--cry))
+          rotateX(var(--crx))
           translate3d(
-            calc(var(--dx) * var(--hover-xy)),
-            calc(var(--dy) * var(--hover-xy)),
-            var(--hover-z)
+            calc(var(--dx) * (var(--tile-offset) + var(--hover-xy))),
+            calc(var(--dy) * (var(--tile-offset) + var(--hover-xy))),
+            calc(var(--cube-half) + var(--hover-z))
           )
-          rotateX(0deg)
-          rotateY(0deg)
-          rotateZ(0deg)
           scale(1);
         border-color: rgba(var(--face-rgb), 0.55);
       }
     }
 
-    /* Exploded state: break free from rigid cube walls into a 3D floating orbital constellation */
+    /* Exploded state: well-spaced 24-tile Fibonacci sphere facing outward from center */
     .skill-cube-stage.is-exploded .skill-tile {
       transform:
-        translate3d(
-          calc(var(--ex) * var(--scatter-xy)),
-          calc(var(--ey) * var(--scatter-xy)),
-          calc(var(--ez) * var(--scatter-z))
-        )
-        rotateX(var(--erx))
-        rotateY(var(--ery))
-        rotateZ(var(--erz))
+        rotateY(var(--sry))
+        rotateX(var(--srx))
+        translate3d(0px, 0px, var(--sphere-radius))
         scale(var(--explode-scale));
-      border-color: rgba(var(--face-rgb), 0.55);
+      border-color: rgba(var(--face-rgb), 0.58);
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.14),
         inset 0 0 20px rgba(var(--face-rgb), 0.16),
@@ -468,15 +463,10 @@
       .skill-cube-stage.is-exploded:not(.is-dragging) .skill-tile.is-hovered {
         animation-play-state: paused;
         transform:
-          translate3d(
-            calc(var(--ex) * var(--scatter-xy)),
-            calc(var(--ey) * var(--scatter-xy)),
-            calc(var(--ez) * var(--scatter-z) + 18px)
-          )
-          rotateX(calc(var(--erx) * 0.25))
-          rotateY(calc(var(--ery) * 0.25))
-          rotateZ(0deg)
-          scale(1.06);
+          rotateY(var(--sry))
+          rotateX(var(--srx))
+          translate3d(0px, 0px, calc(var(--sphere-radius) + 18px))
+          scale(var(--hover-scale));
         border-color: var(--face-accent);
         background: linear-gradient(155deg, rgba(24, 31, 52, 0.97) 0%, rgba(11, 15, 26, 0.98) 100%);
         box-shadow:
@@ -490,15 +480,10 @@
     .skill-cube-stage.is-exploded .skill-tile.is-selected {
       animation-play-state: paused;
       transform:
-        translate3d(
-          calc(var(--ex) * var(--scatter-xy)),
-          calc(var(--ey) * var(--scatter-xy)),
-          calc(var(--ez) * var(--scatter-z) + 22px)
-        )
-        rotateX(0deg)
-        rotateY(0deg)
-        rotateZ(0deg)
-        scale(1.09);
+        rotateY(var(--sry))
+        rotateX(var(--srx))
+        translate3d(0px, 0px, calc(var(--sphere-radius) + 22px))
+        scale(var(--select-scale));
       border-color: var(--face-accent);
       background: linear-gradient(155deg, rgba(28, 36, 60, 0.98) 0%, rgba(12, 16, 28, 0.98) 100%);
       box-shadow:
@@ -2312,28 +2297,51 @@
         { dx: 1, dy: 1 }
       ];
 
-      // Deterministic 3D orbital constellation scatter per face/tile
-      // Breaks all 24 tiles free from the 6 flat cube walls into concentric floating shells
-      const CONSTELLATION_PATTERNS = [
-        [
-          { ex: -1.16, ey: -0.68, ez: 0.42, erx: 15, ery: -18, erz: -9 },
-          { ex: 0.76,  ey: -1.04, ez: 0.96, erx: 17, ery: 15,  erz: 8 },
-          { ex: -0.74, ey: 1.06,  ez: 0.88, erx: -16, ery: -14, erz: 7 },
-          { ex: 1.14,  ey: 0.66,  ez: 0.36, erx: -14, ery: 19,  erz: -8 }
-        ],
-        [
-          { ex: -0.78, ey: -1.05, ez: 0.92, erx: 16, ery: -15, erz: 8 },
-          { ex: 1.18,  ey: -0.64, ez: 0.38, erx: 14, ery: 19,  erz: -9 },
-          { ex: -1.12, ey: 0.72,  ez: 0.44, erx: -15, ery: -17, erz: -7 },
-          { ex: 0.72,  ey: 1.02,  ez: 0.98, erx: -17, ery: 14,  erz: 9 }
-        ],
-        [
-          { ex: -1.04, ey: -0.84, ez: 0.68, erx: 18, ery: -14, erz: -6 },
-          { ex: 0.92,  ey: -0.94, ez: 0.48, erx: 13, ery: 18,  erz: 10 },
-          { ex: -0.88, ey: 0.94,  ez: 0.95, erx: -18, ery: -16, erz: 6 },
-          { ex: 1.06,  ey: 0.82,  ez: 0.62, erx: -14, ery: 16,  erz: -10 }
-        ]
-      ];
+      // Base cube-face orientations (matching rotateY(cry) rotateX(crx) translateZ(half))
+      const FACE_CUBE_ROT = {
+        front:  { crx: 0,   cry: 0 },
+        right:  { crx: 0,   cry: 90 },
+        back:   { crx: 0,   cry: 180 },
+        left:   { crx: 0,   cry: -90 },
+        top:    { crx: 90,  cry: 0 },
+        bottom: { crx: -90, cry: 0 }
+      };
+
+      // Generate 24 evenly distributed Fibonacci sphere unit normals (guaranteeing uniform clear gaps)
+      const TOTAL_TILES = 24;
+      const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+      const spherePoints = [];
+      for (let i = 0; i < TOTAL_TILES; i++) {
+        const ny = -1 + (2 * (i + 0.5)) / TOTAL_TILES;
+        const ringRadius = Math.sqrt(Math.max(0, 1 - ny * ny));
+        const theta = GOLDEN_ANGLE * i;
+        const nx = Math.cos(theta) * ringRadius;
+        const nz = Math.sin(theta) * ringRadius;
+        // Outward-facing spherical angles for CSS transform: rotateY(sry) rotateX(srx) translateZ(R)
+        const srx = (-Math.asin(Math.max(-1, Math.min(1, ny))) * 180) / Math.PI;
+        const sry = (Math.atan2(nx, nz) * 180) / Math.PI;
+        spherePoints.push({ nx, ny, nz, srx, sry, used: false });
+      }
+
+      // Compute each tile's unit direction in collapsed cube space so it flies to its nearest sphere slot
+      function computeCollapsedUnitDir(crxDeg, cryDeg, dx, dy) {
+        const rx = (crxDeg * Math.PI) / 180;
+        const ry = (cryDeg * Math.PI) / 180;
+        const x0 = dx * 0.48;
+        const y0 = dy * 0.48;
+        const z0 = 1;
+        // Apply rotateX(rx) then rotateY(ry) matching CSS rotateY(cry) rotateX(crx)
+        const y1 = y0 * Math.cos(rx) - z0 * Math.sin(rx);
+        const z1 = y0 * Math.sin(rx) + z0 * Math.cos(rx);
+        const x2 = x0 * Math.cos(ry) + z1 * Math.sin(ry);
+        const z2 = -x0 * Math.sin(ry) + z1 * Math.cos(ry);
+        const len = Math.hypot(x2, y1, z2) || 1;
+        return [x2 / len, y1 / len, z2 / len];
+      }
+
+      function shortestDegDelta(fromDeg, toDeg) {
+        return (((toDeg - fromDeg) % 360) + 540) % 360 - 180;
+      }
 
       // Reduced motion preference
       const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -2344,29 +2352,45 @@
         });
       }
 
-      // Build 6 faces x 4 tiles + 6 face-focus pills
+      // Build 6 cube face frames + 24 direct-child tiles (6x4 cube collapsed -> 24-pt Fibonacci sphere exploded)
       const tileMap = new Map();
       const pillButtons = [];
 
       SKILL_FACES.forEach((face, faceIndex) => {
-        const faceEl = document.createElement('div');
-        faceEl.className = `skill-face ${face.faceClass}`;
-        faceEl.dataset.faceId = face.id;
-        faceEl.style.setProperty('--face-accent', face.accent);
-        faceEl.style.setProperty('--face-rgb', face.rgb);
-
         const frameEl = document.createElement('div');
-        frameEl.className = 'skill-face-frame';
+        frameEl.className = `skill-face-frame ${face.faceClass}`;
+        frameEl.dataset.faceId = face.id;
+        frameEl.style.setProperty('--face-accent', face.accent);
+        frameEl.style.setProperty('--face-rgb', face.rgb);
         frameEl.setAttribute('aria-hidden', 'true');
-        faceEl.appendChild(frameEl);
+        cube.appendChild(frameEl);
 
-        const facePattern = CONSTELLATION_PATTERNS[faceIndex % CONSTELLATION_PATTERNS.length];
+        const faceRot = FACE_CUBE_ROT[face.id] || { crx: 0, cry: 0 };
 
         face.skills.forEach((skill, tileIndex) => {
           const tileKey = `${faceIndex}-${tileIndex}`;
           const offset = TILE_OFFSETS[tileIndex];
-          const scatter = facePattern[tileIndex];
           const globalIdx = faceIndex * 4 + tileIndex;
+
+          // Match this tile to the closest available Fibonacci sphere point
+          const [ux, uy, uz] = computeCollapsedUnitDir(faceRot.crx, faceRot.cry, offset.dx, offset.dy);
+          let bestSlot = null;
+          let bestDot = -Infinity;
+          for (let p = 0; p < spherePoints.length; p++) {
+            const pt = spherePoints[p];
+            if (pt.used) continue;
+            const dot = pt.nx * ux + pt.ny * uy + pt.nz * uz;
+            if (dot > bestDot) {
+              bestDot = dot;
+              bestSlot = pt;
+            }
+          }
+          bestSlot.used = true;
+
+          // Wrap spherical yaw to shortest turn from collapsed face yaw for smooth fly-out/fly-back
+          const smoothSry = faceRot.cry + shortestDegDelta(faceRot.cry, bestSlot.sry);
+          const smoothSrx = faceRot.crx + shortestDegDelta(faceRot.crx, bestSlot.srx);
+
           const bobDur = (3.8 + ((globalIdx * 7) % 11) * 0.14).toFixed(2);
           const bobDelay = (-((globalIdx * 0.43) % 4.2)).toFixed(2);
 
@@ -2377,14 +2401,14 @@
           tileEl.dataset.faceIndex = String(faceIndex);
           tileEl.dataset.tileIndex = String(tileIndex);
           tileEl.setAttribute('aria-label', `${skill.name} (${face.category})`);
+          tileEl.style.setProperty('--face-accent', face.accent);
+          tileEl.style.setProperty('--face-rgb', face.rgb);
           tileEl.style.setProperty('--dx', String(offset.dx));
           tileEl.style.setProperty('--dy', String(offset.dy));
-          tileEl.style.setProperty('--ex', String(scatter.ex));
-          tileEl.style.setProperty('--ey', String(scatter.ey));
-          tileEl.style.setProperty('--ez', String(scatter.ez));
-          tileEl.style.setProperty('--erx', `${scatter.erx}deg`);
-          tileEl.style.setProperty('--ery', `${scatter.ery}deg`);
-          tileEl.style.setProperty('--erz', `${scatter.erz}deg`);
+          tileEl.style.setProperty('--crx', `${faceRot.crx}deg`);
+          tileEl.style.setProperty('--cry', `${faceRot.cry}deg`);
+          tileEl.style.setProperty('--srx', `${smoothSrx.toFixed(2)}deg`);
+          tileEl.style.setProperty('--sry', `${smoothSry.toFixed(2)}deg`);
           tileEl.style.setProperty('--bob-dur', `${bobDur}s`);
           tileEl.style.setProperty('--bob-delay', `${bobDelay}s`);
           tileEl.innerHTML = `
@@ -2411,11 +2435,9 @@
               }
             }
           });
-          faceEl.appendChild(tileEl);
+          cube.appendChild(tileEl);
           tileMap.set(tileKey, { el: tileEl, face, skill, faceIndex, tileIndex });
         });
-
-        cube.appendChild(faceEl);
 
         // Create corresponding face-focus pill
         const pill = document.createElement('button');
