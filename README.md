@@ -1,6 +1,6 @@
 # 🌌 Nguyễn Hồ Sỹ Phú — Intern / Fresher Portfolio
 
-> Portfolio cá nhân của **Nguyễn Hồ Sỹ Phú** — Sinh viên mới ra trường ngành Kỹ thuật Phần mềm (Đại học Gia Định), tìm kiếm cơ hội **Intern / Fresher Fullstack hoặc Backend Developer** với Java Spring Boot và React / TypeScript.
+> Portfolio cá nhân của **Nguyễn Hồ Sỹ Phú** — Sinh viên mới ra trường ngành Kỹ thuật Phần mềm (Đại học Gia Định), tìm kiếm cơ hội **Intern / Fresher Fullstack hoặc Backend Developer** với Java Spring Boot và React.
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-00f0ff?style=for-the-badge&logo=githubpages&logoColor=black)](https://nhsphu.github.io/Profolio/)
 [![GitHub Profile](https://img.shields.io/badge/GitHub-NhsPhu-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/NhsPhu)
@@ -15,7 +15,7 @@
 - **Họ tên**: Nguyễn Hồ Sỹ Phú (Sinh năm 2005)
 - **Học vấn**: Đại học Gia Định — Kỹ thuật Phần mềm (2023–2026), GPA: **7.29 / 10**
 - **Vị trí tìm kiếm**: **Intern / Fresher Fullstack hoặc Backend Developer** (On-site / Hybrid tại TP. Hồ Chí Minh)
-- **Kỹ năng thực hành qua đồ án**: Nền tảng cơ bản về **Java Spring Boot 3**, **React / TypeScript**, đã làm quen **REST API**, **PostgreSQL / MySQL**, **Redis**, **RabbitMQ**, **Elasticsearch 8** và **Docker Compose** qua các đồ án đại học và dự án cá nhân.
+- **Kỹ năng thực hành qua đồ án**: Nền tảng cơ bản về **Java Spring Boot 3**, **React / JavaScript**, đã làm quen **REST API**, **PostgreSQL / MySQL**, **Redis**, **RabbitMQ**, **Elasticsearch 8** và **Docker Compose** qua các đồ án đại học và dự án cá nhân.
 
 ---
 
@@ -40,7 +40,7 @@
    - Phím nóng `T` để mở nhanh cửa sổ CLI.
 
 5. **Đồ án cá nhân & học tập**:
-   - 🛒 **Omni Marketplace**: Đồ án TMĐT B2B2C thực hành Java Spring Boot 3, React / TypeScript (mới làm quen Next.js), RabbitMQ, Redis, Elasticsearch 8 và Docker trên môi trường local/sandbox.
+   - 🛒 **Omni Marketplace**: Đồ án TMĐT B2B2C thực hành Java Spring Boot 3, React / JavaScript (mới làm quen Next.js), RabbitMQ, Redis, Elasticsearch 8 và Docker trên môi trường local/sandbox.
    - 🎬 **Movie Streaming System**: Đồ án xem phim Web & Android thực hành FFmpeg (HLS), Kotlin Android (ExoPlayer), React 18 và FastAPI gợi ý phim cơ bản.
    - 📊 **AI Sales Analysis Dashboard**: Đồ án phân tích dữ liệu bán hàng mẫu với Python, Streamlit, Plotly, Groq API và Facebook Prophet.
    - 📚 **Bookstore Manager**: Đồ án ứng dụng Desktop quản lý nhà sách cơ bản với Python, CustomTkinter và MySQL.
