@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nguyễn Hồ Sỹ Phú | Fullstack / Backend Developer (Intern · Fresher)</title>
   <meta name="description" content="Portfolio của Nguyễn Hồ Sỹ Phú - Sinh viên mới ra trường ngành Kỹ thuật Phần mềm (ĐH Gia Định), tìm kiếm cơ hội Intern / Fresher Fullstack hoặc Backend Developer với Java Spring Boot và React." />
+  <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+  <link rel="shortcut icon" href="./favicon.ico" />
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -1635,32 +1637,67 @@
 
           </div>
 
-          <!-- Right: Interactive Quick Message Form -->
-          <div class="lg:col-span-6 bg-dark-900/90 rounded-2xl p-6 sm:p-8 border border-white/10 shadow-2xl">
-            <h3 class="text-xl font-bold text-white mb-2">Gửi Tin Nhắn Nhanh</h3>
-            <p class="text-xs text-slate-400 font-mono mb-6">Mẫu form này sẽ chuẩn bị email và gửi trực tiếp tới hộp thư của mình.</p>
-
-            <form onsubmit="handleContactSubmit(event)" class="space-y-4 text-xs font-mono">
+          <!-- Right: Recruiter Quick Info Card -->
+          <div class="lg:col-span-6 bg-dark-900/90 rounded-2xl p-6 sm:p-8 border border-white/10 shadow-2xl space-y-6">
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-white/10">
               <div>
-                <label class="block text-slate-400 mb-1">Tên của bạn hoặc Công ty *</label>
-                <input id="senderName" type="text" required placeholder="Ví dụ: Nguyễn Văn A - HR Tech Corp" class="w-full bg-dark-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-400 transition-colors" />
+                <h3 class="text-xl font-bold text-white">Thông Tin Nhanh Cho Nhà Tuyển Dụng</h3>
+                <p class="text-xs text-slate-400 font-mono mt-1">Tóm tắt ngắn gọn để anh/chị dễ dàng trao đổi &amp; sắp xếp phỏng vấn.</p>
+              </div>
+              <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-semibold shrink-0">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span>Sẵn sàng nhận việc</span>
+              </span>
+            </div>
+
+            <div class="space-y-3 text-xs font-mono">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 p-3 rounded-xl bg-dark-950/80 border border-white/[0.06]">
+                <span class="text-slate-400 flex items-center gap-2">
+                  <i data-lucide="briefcase" class="w-3.5 h-3.5 text-cyan-400 shrink-0"></i>
+                  <span>Vị trí ứng tuyển</span>
+                </span>
+                <span class="text-white font-semibold sm:text-right">Intern / Fresher Backend (Java) hoặc Fullstack</span>
               </div>
 
-              <div>
-                <label class="block text-slate-400 mb-1">Email liên hệ lại *</label>
-                <input id="senderEmail" type="email" required placeholder="recruiter@company.com" class="w-full bg-dark-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-400 transition-colors" />
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 p-3 rounded-xl bg-dark-950/80 border border-white/[0.06]">
+                <span class="text-slate-400 flex items-center gap-2">
+                  <i data-lucide="map-pin" class="w-3.5 h-3.5 text-indigo-400 shrink-0"></i>
+                  <span>Hình thức làm việc</span>
+                </span>
+                <span class="text-slate-200 font-medium sm:text-right">On-site / Hybrid tại TP. Hồ Chí Minh</span>
               </div>
 
-              <div>
-                <label class="block text-slate-400 mb-1">Nội dung trao đổi *</label>
-                <textarea id="senderMsg" rows="4" required placeholder="Chào Phú, mình muốn trao đổi về vị trí Fresher/Intern Backend Developer..." class="w-full bg-dark-950 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-400 transition-colors resize-none"></textarea>
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 p-3 rounded-xl bg-dark-950/80 border border-white/[0.06]">
+                <span class="text-slate-400 flex items-center gap-2">
+                  <i data-lucide="graduation-cap" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
+                  <span>Học vấn</span>
+                </span>
+                <span class="text-slate-200 font-medium sm:text-right">ĐH Gia Định · Kỹ thuật Phần mềm (2023–2026) · GPA 7.29/10</span>
               </div>
 
-              <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-bold tracking-wide transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 p-3 rounded-xl bg-dark-950/80 border border-white/[0.06]">
+                <span class="text-slate-400 flex items-center gap-2">
+                  <i data-lucide="calendar-check" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>
+                  <span>Thời gian bắt đầu</span>
+                </span>
+                <span class="text-emerald-300 font-semibold sm:text-right">Có thể phỏng vấn &amp; đi làm ngay</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <a href="mailto:nguyenhosyphu@gmail.com?subject=%5BPh%E1%BB%8Fng%20V%E1%BA%A5n%20Intern%2FFresher%5D%20Trao%20%C4%91%E1%BB%95i%20c%C6%A1%20h%E1%BB%99i%20h%E1%BB%A3p%20t%C3%A1c" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-mono text-xs font-bold tracking-wide transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 active:scale-95">
                 <i data-lucide="send" class="w-4 h-4"></i>
-                <span>Gửi Tin Nhắn Ngay</span>
+                <span>Soạn Email Ngay</span>
+              </a>
+
+              <button type="button" onclick="copyText('0337843118', 'Đã copy số điện thoại: 0337 843 118')" class="w-full py-3 px-4 rounded-xl bg-dark-850 hover:bg-dark-800 text-slate-200 hover:text-emerald-300 border border-white/10 hover:border-emerald-500/40 font-mono text-xs font-semibold transition-all flex items-center justify-center gap-2 active:scale-95">
+                <i data-lucide="copy" class="w-4 h-4 text-emerald-400"></i>
+                <span>Sao chép SĐT (0337 843 118)</span>
               </button>
-            </form>
+            </div>
           </div>
 
         </div>
@@ -1764,20 +1801,6 @@
         document.body.removeChild(textarea);
         showToast(successMsg || 'Đã sao chép vào bộ nhớ tạm!');
       });
-    }
-
-    // Contact Form Handler
-    function handleContactSubmit(e) {
-      e.preventDefault();
-      const name = document.getElementById('senderName').value;
-      const email = document.getElementById('senderEmail').value;
-      const msg = document.getElementById('senderMsg').value;
-      
-      const subject = encodeURIComponent(`[Phỏng Vấn/Hợp Tác] ${name}`);
-      const body = encodeURIComponent(`Xin chào Phú,\n\nTôi là: ${name} (${email})\n\nNội dung trao đổi:\n${msg}\n\nTrân trọng!`);
-      
-      window.location.href = `mailto:nguyenhosyphu@gmail.com?subject=${subject}&body=${body}`;
-      showToast('Đang mở ứng dụng email của bạn...');
     }
 
     // Terminal Commands Logic
