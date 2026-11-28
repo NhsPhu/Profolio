@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nguyễn Hồ Sỹ Phú | Fullstack & Backend Engineer Portfolio</title>
-  <meta name="description" content="Portfolio của Nguyễn Hồ Sỹ Phú - Fullstack Developer định hướng Backend API hiệu năng cao, Microservices, Spring Boot, Next.js và Event-Driven Architecture." />
+  <title>Nguyễn Hồ Sỹ Phú | Fullstack / Backend Developer (Intern · Fresher)</title>
+  <meta name="description" content="Portfolio của Nguyễn Hồ Sỹ Phú - Sinh viên mới ra trường ngành Kỹ thuật Phần mềm (ĐH Gia Định), tìm kiếm cơ hội Intern / Fresher Fullstack hoặc Backend Developer với Java Spring Boot và Next.js." />
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -143,14 +143,14 @@
     .skill-cube-stage {
       --cube-size: 220px;
       --cube-half: 110px;
-      --tile-size: 99px;
-      --tile-offset: 53px;
+      --tile-size: 92px;
+      --tile-offset: 51px;
       --hover-z: 10px;
       --hover-xy: 4px;
       --sphere-radius: 148px;
-      --explode-scale: 0.58;
-      --hover-scale: 0.84;
-      --select-scale: 0.88;
+      --explode-scale: 0.62;
+      --hover-scale: 0.86;
+      --select-scale: 0.9;
       position: relative;
       width: 100%;
       height: 410px;
@@ -167,14 +167,14 @@
       .skill-cube-stage {
         --cube-size: 280px;
         --cube-half: 140px;
-        --tile-size: 126px;
-        --tile-offset: 67.5px;
+        --tile-size: 118px;
+        --tile-offset: 66px;
         --hover-z: 15px;
         --hover-xy: 6px;
         --sphere-radius: 238px;
-        --explode-scale: 0.68;
-        --hover-scale: 0.9;
-        --select-scale: 0.94;
+        --explode-scale: 0.72;
+        --hover-scale: 0.94;
+        --select-scale: 0.98;
         height: 580px;
       }
     }
@@ -436,6 +436,33 @@
           scale(1);
         border-color: rgba(var(--face-rgb), 0.55);
       }
+
+      .skill-cube-stage:not(.is-exploded):not(.is-dragging) .skill-tile:hover {
+        border-color: var(--face-accent);
+        background: linear-gradient(155deg, rgba(24, 31, 52, 0.97) 0%, rgba(11, 15, 26, 0.98) 100%);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.18),
+          0 0 22px rgba(var(--face-rgb), 0.38),
+          0 10px 24px rgba(0, 0, 0, 0.6);
+      }
+    }
+
+    .skill-cube-stage:not(.is-exploded) .skill-tile.is-selected {
+      transform:
+        rotateY(var(--cry))
+        rotateX(var(--crx))
+        translate3d(
+          calc(var(--dx) * (var(--tile-offset) + var(--hover-xy))),
+          calc(var(--dy) * (var(--tile-offset) + var(--hover-xy))),
+          calc(var(--cube-half) + var(--hover-z) + 6px)
+        )
+        scale(1.03);
+      border-color: var(--face-accent);
+      background: linear-gradient(155deg, rgba(28, 36, 60, 0.98) 0%, rgba(12, 16, 28, 0.98) 100%);
+      box-shadow:
+        0 0 0 1.5px var(--face-accent),
+        0 0 28px rgba(var(--face-rgb), 0.52),
+        0 12px 28px rgba(0, 0, 0, 0.68);
     }
 
     /* Exploded state: well-spaced 24-tile Fibonacci sphere facing outward from center */
@@ -459,8 +486,7 @@
     }
 
     @media (hover: hover) {
-      .skill-cube-stage.is-exploded:not(.is-dragging) .skill-tile:hover,
-      .skill-cube-stage.is-exploded:not(.is-dragging) .skill-tile.is-hovered {
+      .skill-cube-stage.is-exploded:not(.is-dragging) .skill-tile:hover {
         animation-play-state: paused;
         transform:
           rotateY(var(--sry))
@@ -619,7 +645,7 @@
             Phu.dev
             <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
           </span>
-          <span class="text-[10px] font-mono text-slate-400 tracking-wider uppercase">Fullstack & Backend</span>
+          <span class="text-[10px] font-mono text-slate-400 tracking-wider uppercase">Intern · Fresher</span>
         </div>
       </a>
 
@@ -628,9 +654,9 @@
         <a href="#about" class="px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] rounded-full transition-all">Về tôi</a>
         <a href="#simulator" class="px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] rounded-full transition-all flex items-center gap-1.5">
           <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
-          Kiến trúc Hệ thống
+          Mô phỏng Đồ án
         </a>
-        <a href="#projects" class="px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] rounded-full transition-all">Dự án trọng tâm</a>
+        <a href="#projects" class="px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] rounded-full transition-all">Đồ án cá nhân</a>
         <a href="#skills" class="px-3.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] rounded-full transition-all">Kỹ năng</a>
         <a href="#terminal" class="px-3.5 py-1.5 text-xs font-medium text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10 rounded-full transition-all flex items-center gap-1">
           <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
@@ -663,8 +689,8 @@
     <!-- Mobile Nav Menu -->
     <div id="mobileMenu" class="hidden md:hidden bg-dark-900/95 border-b border-white/10 px-4 py-4 space-y-2 backdrop-blur-2xl">
       <a href="#about" class="block px-3 py-2 text-sm text-slate-300 hover:bg-white/5 rounded-lg">Về tôi</a>
-      <a href="#simulator" class="block px-3 py-2 text-sm text-cyan-300 hover:bg-white/5 rounded-lg">Mô phỏng kiến trúc</a>
-      <a href="#projects" class="block px-3 py-2 text-sm text-slate-300 hover:bg-white/5 rounded-lg">Dự án trọng tâm</a>
+      <a href="#simulator" class="block px-3 py-2 text-sm text-cyan-300 hover:bg-white/5 rounded-lg">Mô phỏng đồ án</a>
+      <a href="#projects" class="block px-3 py-2 text-sm text-slate-300 hover:bg-white/5 rounded-lg">Đồ án cá nhân</a>
       <a href="#skills" class="block px-3 py-2 text-sm text-slate-300 hover:bg-white/5 rounded-lg">Kỹ năng</a>
       <a href="#terminal" class="block px-3 py-2 text-sm text-slate-300 hover:bg-white/5 rounded-lg">CLI Terminal</a>
       <a href="#contact" class="block px-3 py-2 text-sm text-slate-300 hover:bg-white/5 rounded-lg">Liên hệ</a>
@@ -687,7 +713,7 @@
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
-            <span>Available for Hire · Fresher / Intern Fullstack & Backend</span>
+            <span>Open to Opportunities · Intern / Fresher Fullstack &amp; Backend</span>
           </div>
 
           <!-- Main Headline -->
@@ -699,20 +725,22 @@
                 Sỹ Phú
               </span>
             </h1>
-            <p class="text-xl sm:text-2xl font-medium text-slate-300 flex items-center gap-2 pt-1">
-              <span class="text-slate-400">Fullstack Engineer &</span>
-              <span class="text-cyan-300 font-mono text-lg sm:text-xl border-b border-cyan-400/30">Backend Architect</span>
+            <p class="text-lg sm:text-2xl font-medium text-slate-300 flex flex-wrap items-center gap-2 pt-1">
+              <span class="text-white">Fullstack / Backend Developer</span>
+              <span class="text-cyan-300 font-mono text-base sm:text-lg border-b border-cyan-400/30">(Intern · Fresher)</span>
+            </p>
+            <p class="text-xs sm:text-sm font-mono text-slate-400">
+              Sinh viên mới ra trường · Đại học Gia Định
             </p>
           </div>
 
           <!-- Personal Mission Statement -->
           <p class="text-slate-400 text-base sm:text-lg leading-relaxed max-w-2xl font-normal">
-            Sinh viên Kỹ thuật Phần mềm (Đại học Gia Định, 2023–2026, <strong class="text-slate-200">GPA 7.29/10</strong>). 
-            Định hướng thiết kế <strong class="text-cyan-300">Backend API hiệu năng cao</strong>, 
-            kiến trúc <strong class="text-indigo-300">Microservices</strong> &amp; <strong class="text-purple-300">Hexagonal Architecture</strong> 
-            với <span class="text-white font-medium">Java Spring Boot 3</span>, <span class="text-white font-medium">Next.js 16</span>, 
-            kết hợp message broker <span class="text-amber-300 font-medium">RabbitMQ</span>, bộ nhớ đệm <span class="text-rose-300 font-medium">Redis</span> 
-            và tìm kiếm đa chiều <span class="text-emerald-300 font-medium">Elasticsearch 8</span>.
+            Sinh viên mới ra trường ngành Kỹ thuật Phần mềm (Đại học Gia Định, 2023–2026, <strong class="text-slate-200">GPA 7.29/10</strong>). 
+            Mình có nền tảng cơ bản vững về <span class="text-white font-medium">Java Spring Boot</span> &amp; <span class="text-white font-medium">Next.js</span>, 
+            đã tự học và thực hành qua các đồ án đại học/cá nhân với <strong class="text-cyan-300">REST API</strong>, 
+            <span class="text-rose-300 font-medium">Redis</span>, <span class="text-amber-300 font-medium">RabbitMQ</span> và <span class="text-indigo-300 font-medium">Docker</span>. 
+            Rất mong được gia nhập một đội ngũ ở vị trí <strong class="text-emerald-300">Intern / Fresher</strong> để học hỏi quy trình làm việc thực tế và đóng góp hết mình.
           </p>
 
           <!-- Core Philosophy Quote -->
@@ -726,7 +754,7 @@
           <div class="flex flex-wrap items-center gap-3 pt-2">
             <a href="#projects" class="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-cyan-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2">
               <i data-lucide="layers" class="w-4 h-4"></i>
-              <span>Xem Dự Án Trọng Tâm</span>
+              <span>Xem Đồ Án Cá Nhân</span>
             </a>
 
             <button onclick="copyText('nguyenhosyphu@gmail.com', 'Đã copy Email: nguyenhosyphu@gmail.com')" class="px-4 py-3 rounded-xl bg-dark-850 hover:bg-dark-800 text-slate-300 hover:text-cyan-300 border border-white/10 hover:border-cyan-500/40 font-mono text-xs transition-all flex items-center gap-2 active:scale-95 group">
@@ -789,12 +817,12 @@
                   <span class="text-white">neofetch</span>
                 </div>
                 <div class="text-slate-300 leading-relaxed bg-dark-900/60 p-3 rounded-lg border border-white/5">
-                  <span class="text-cyan-400 font-bold">OS:</span> Obsidian Engineer v2026<br/>
-                  <span class="text-cyan-400 font-bold">Host:</span> Software Engineer (Fresher / Intern)<br/>
-                  <span class="text-cyan-400 font-bold">Kernel:</span> Java 17 · Spring Boot 3 · Hexagonal<br/>
-                  <span class="text-cyan-400 font-bold">Uptime:</span> 3+ years coding, always building<br/>
-                  <span class="text-cyan-400 font-bold">Packages:</span> Next.js 16, TypeScript, RabbitMQ, Redis, Elasticsearch<br/>
-                  <span class="text-cyan-400 font-bold">Memory:</span> High resilience, quick learning &amp; production focus
+                  <span class="text-cyan-400 font-bold">OS:</span> Phu.dev Portfolio v2026<br/>
+                  <span class="text-cyan-400 font-bold">Host:</span> Fresh Graduate (Intern / Fresher)<br/>
+                  <span class="text-cyan-400 font-bold">Stack:</span> Java 17 · Spring Boot 3 · Next.js 16<br/>
+                  <span class="text-cyan-400 font-bold">Uptime:</span> Mới ra trường (2023–2026), chủ động tự học<br/>
+                  <span class="text-cyan-400 font-bold">Practiced:</span> React, TypeScript, Redis, RabbitMQ, Docker<br/>
+                  <span class="text-cyan-400 font-bold">Mindset:</span> Ham học hỏi, sẵn sàng tiếp thu từ thực tế
                 </div>
               </div>
 
@@ -805,9 +833,9 @@
                 </div>
                 <div class="text-slate-300 bg-dark-900/60 p-3 rounded-lg border border-white/5">
                   <span class="text-purple-400">{</span><br/>
-                  &nbsp;&nbsp;<span class="syntax-prop">"role"</span>: <span class="syntax-str">"Backend / Fullstack Engineer"</span>,<br/>
-                  &nbsp;&nbsp;<span class="syntax-prop">"primary_goal"</span>: <span class="syntax-str">"Đóng góp vào các hệ thống Microservices quy mô lớn"</span>,<br/>
-                  &nbsp;&nbsp;<span class="syntax-prop">"status"</span>: <span class="syntax-keyword">"Ready to interview &amp; onboard immediately"</span><br/>
+                  &nbsp;&nbsp;<span class="syntax-prop">"role"</span>: <span class="syntax-str">"Intern / Fresher Fullstack &amp; Backend"</span>,<br/>
+                  &nbsp;&nbsp;<span class="syntax-prop">"primary_goal"</span>: <span class="syntax-str">"Tìm vị trí Intern / Fresher để học hỏi quy trình thực tế và đóng góp cho team"</span>,<br/>
+                  &nbsp;&nbsp;<span class="syntax-prop">"status"</span>: <span class="syntax-keyword">"Sẵn sàng phỏng vấn và nhận việc ngay"</span><br/>
                   <span class="text-purple-400">}</span>
                 </div>
               </div>
@@ -840,75 +868,75 @@
       </div>
     </section>
 
-    <!-- KEY ENGINEERING HIGHLIGHTS RIBBON -->
+    <!-- KEY HIGHLIGHTS RIBBON -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         
         <!-- Metric 1 -->
         <div class="spotlight-card p-5 rounded-2xl flex flex-col justify-between">
           <div class="flex items-center justify-between text-slate-400 mb-3">
-            <span class="font-mono text-xs uppercase tracking-wider">Hệ thống trọng tâm</span>
+            <span class="font-mono text-xs uppercase tracking-wider">Đồ án tiêu biểu</span>
             <i data-lucide="boxes" class="w-4 h-4 text-cyan-400"></i>
           </div>
           <div>
-            <div class="text-2xl sm:text-3xl font-extrabold text-white">Omni B2B2C</div>
-            <div class="text-xs text-slate-400 font-mono mt-1">Modular Monolith &amp; Hexagonal</div>
+            <div class="text-2xl sm:text-3xl font-extrabold text-white">Omni Marketplace</div>
+            <div class="text-xs text-slate-400 font-mono mt-1">Đồ án TMĐT B2B2C cá nhân</div>
           </div>
         </div>
 
         <!-- Metric 2 -->
         <div class="spotlight-card p-5 rounded-2xl flex flex-col justify-between">
           <div class="flex items-center justify-between text-slate-400 mb-3">
-            <span class="font-mono text-xs uppercase tracking-wider">Hiệu năng &amp; Cache</span>
-            <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+            <span class="font-mono text-xs uppercase tracking-wider">Nền tảng chính</span>
+            <i data-lucide="code-2" class="w-4 h-4 text-amber-400"></i>
           </div>
           <div>
-            <div class="text-2xl sm:text-3xl font-extrabold text-white">~60% Giảm tải</div>
-            <div class="text-xs text-slate-400 font-mono mt-1">Redis Cache + Bucket4j Limit</div>
+            <div class="text-2xl sm:text-3xl font-extrabold text-white">Java &amp; Next.js</div>
+            <div class="text-xs text-slate-400 font-mono mt-1">Spring Boot 3 · React · TypeScript</div>
           </div>
         </div>
 
         <!-- Metric 3 -->
         <div class="spotlight-card p-5 rounded-2xl flex flex-col justify-between">
           <div class="flex items-center justify-between text-slate-400 mb-3">
-            <span class="font-mono text-xs uppercase tracking-wider">Event-Driven Flow</span>
+            <span class="font-mono text-xs uppercase tracking-wider">Thực hành Backend</span>
             <i data-lucide="git-branch" class="w-4 h-4 text-indigo-400"></i>
           </div>
           <div>
-            <div class="text-2xl sm:text-3xl font-extrabold text-white">RabbitMQ</div>
-            <div class="text-xs text-slate-400 font-mono mt-1">Async Order, Pay, Notification</div>
+            <div class="text-2xl sm:text-3xl font-extrabold text-white">Cache &amp; Queue</div>
+            <div class="text-xs text-slate-400 font-mono mt-1">Làm quen Redis, RabbitMQ, Docker</div>
           </div>
         </div>
 
         <!-- Metric 4 -->
         <div class="spotlight-card p-5 rounded-2xl flex flex-col justify-between">
           <div class="flex items-center justify-between text-slate-400 mb-3">
-            <span class="font-mono text-xs uppercase tracking-wider">Độ chính xác AI Sales</span>
-            <i data-lucide="trending-up" class="w-4 h-4 text-emerald-400"></i>
+            <span class="font-mono text-xs uppercase tracking-wider">Học vấn</span>
+            <i data-lucide="graduation-cap" class="w-4 h-4 text-emerald-400"></i>
           </div>
           <div>
-            <div class="text-2xl sm:text-3xl font-extrabold text-white">MAPE &lt; 8%</div>
-            <div class="text-xs text-slate-400 font-mono mt-1">Prophet + Groq NLP Analytics</div>
+            <div class="text-2xl sm:text-3xl font-extrabold text-white">GPA 7.29 / 10</div>
+            <div class="text-xs text-slate-400 font-mono mt-1">Kỹ thuật Phần mềm · ĐH Gia Định</div>
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- INTERACTIVE ARCHITECTURE SIMULATOR (ĐỘC QUYỀN & XỊN XÒ) -->
+    <!-- INTERACTIVE ARCHITECTURE SIMULATOR -->
     <section id="simulator" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div class="rounded-3xl bg-dark-900/90 border border-white/10 p-6 sm:p-10 backdrop-blur-xl relative overflow-hidden">
         
         <div class="max-w-3xl mb-8 space-y-2">
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 font-mono text-xs">
             <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
-            <span>Interactive System Design Playground</span>
+            <span>Learning &amp; Architecture Demo</span>
           </div>
           <h2 class="text-2xl sm:text-4xl font-bold text-white tracking-tight">
-            Mô phỏng Luồng Dữ liệu Kiến trúc (Omni Marketplace)
+            Mô phỏng Luồng Xử Lý Đồ Án (Omni Marketplace)
           </h2>
           <p class="text-slate-400 text-sm sm:text-base">
-            Bấm vào các kịch bản thực tế bên dưới để quan sát cách các module tương tác bất đồng bộ qua RabbitMQ, tối ưu hóa truy vấn bằng Redis và tìm kiếm qua Elasticsearch 8.
+            Bấm vào các kịch bản bên dưới để xem cách mình tìm hiểu và thực hành xử lý hàng đợi bất đồng bộ (RabbitMQ), caching (Redis) và tìm kiếm (Elasticsearch 8) trong đồ án cá nhân.
           </p>
         </div>
 
@@ -983,7 +1011,7 @@
       </div>
     </section>
 
-    <!-- FEATURED PROJECTS SHOWCASE -->
+    <!-- PERSONAL & ACADEMIC PROJECTS SHOWCASE -->
     <section id="projects" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       
       <!-- Section Header -->
@@ -991,21 +1019,21 @@
         <div>
           <div class="inline-flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase tracking-wider mb-2">
             <i data-lucide="folder-git-2" class="w-4 h-4"></i>
-            <span>Production-Grade Projects</span>
+            <span>Personal &amp; Academic Projects</span>
           </div>
           <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            Dự Án Trọng Tâm &amp; Thực Chiến
+            Đồ Án Cá Nhân &amp; Thực Hành
           </h2>
         </div>
         <p class="text-slate-400 text-sm max-w-md font-normal">
-          Tập trung vào kiến trúc thực tế, tối ưu hóa hiệu năng, xử lý tác vụ bất đồng bộ và kiểm thử độ chịu tải.
+          Các đồ án môn học và dự án tự thực hành trên môi trường local/sandbox giúp mình rèn luyện tư duy backend, API và kết nối cơ sở dữ liệu.
         </p>
       </div>
 
       <!-- Project Cards Grid -->
       <div class="space-y-10">
 
-        <!-- PROJECT 1: OMNI MARKETPLACE (FLAGSHIP) -->
+        <!-- PROJECT 1: OMNI MARKETPLACE -->
         <div class="spotlight-card rounded-3xl p-6 sm:p-10 border border-indigo-500/30 relative overflow-hidden group">
           <div class="absolute -right-20 -top-20 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-cyan-500/15 transition-all duration-500"></div>
 
@@ -1015,13 +1043,13 @@
               
               <div class="flex flex-wrap items-center gap-2.5">
                 <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-md shadow-indigo-500/30">
-                  FLAGSHIP PROJECT
+                  ĐỒ ÁN CÁ NHÂN
                 </span>
                 <span class="px-3 py-1 rounded-full text-xs font-mono bg-dark-800 text-cyan-300 border border-cyan-500/30">
                   B2B2C Multi-Vendor
                 </span>
                 <span class="px-3 py-1 rounded-full text-xs font-mono bg-dark-800 text-slate-300 border border-white/10">
-                  Shopee / Tiki Architecture
+                  Môi trường local / Sandbox
                 </span>
               </div>
 
@@ -1033,29 +1061,29 @@
                   </a>
                 </h3>
                 <p class="text-slate-300 text-sm sm:text-base leading-relaxed mt-2">
-                  Nền tảng thương mại điện tử đa nhà bán <strong class="text-white">(B2B2C)</strong> được xây dựng từ đầu theo mô hình 
-                  <strong class="text-indigo-300">Modular Monolith</strong> kết hợp <strong class="text-cyan-300">Hexagonal Architecture</strong>, 
-                  phân tách độc lập tầng Domain Business logic khỏi Infrastructure.
+                  Đồ án thương mại điện tử đa nhà bán <strong class="text-white">(B2B2C)</strong> tự học và thực hành tổ chức code theo 
+                  <strong class="text-indigo-300">Modular Monolith</strong> kết hợp <strong class="text-cyan-300">Hexagonal Architecture</strong> 
+                  để làm quen cách tách bạch tầng nghiệp vụ và hạ tầng.
                 </p>
               </div>
 
-              <!-- Technical Achievements Checklist -->
+              <!-- Technical Practice Checklist -->
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono text-slate-300 pt-1">
                 <div class="flex items-start gap-2 bg-dark-900/70 p-3 rounded-xl border border-white/5">
                   <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-                  <span><strong>RabbitMQ Event-Driven:</strong> Xử lý đặt hàng, thanh toán và gửi thông báo bất đồng bộ, chống nghẽn I/O.</span>
+                  <span><strong>RabbitMQ:</strong> Tìm hiểu &amp; áp dụng hàng đợi bất đồng bộ cho luồng đặt hàng, thanh toán và gửi thông báo mẫu.</span>
                 </div>
                 <div class="flex items-start gap-2 bg-dark-900/70 p-3 rounded-xl border border-white/5">
                   <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-                  <span><strong>Elasticsearch 8:</strong> Tìm kiếm full-text đa chiều, bộ lọc động và đồng bộ thời gian thực từ DB.</span>
+                  <span><strong>Elasticsearch 8:</strong> Thực hành tìm kiếm từ khóa, lọc danh mục và đồng bộ dữ liệu sản phẩm từ PostgreSQL.</span>
                 </div>
                 <div class="flex items-start gap-2 bg-dark-900/70 p-3 rounded-xl border border-white/5">
                   <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-                  <span><strong>Redis Cache &amp; Bucket4j:</strong> Giảm ~60% truy vấn cơ sở dữ liệu, chống DDoS &amp; brute-force rate limit.</span>
+                  <span><strong>Redis &amp; Bucket4j:</strong> Thực hành cache dữ liệu hay truy cập và giới hạn tần suất request cơ bản ở tầng API.</span>
                 </div>
                 <div class="flex items-start gap-2 bg-dark-900/70 p-3 rounded-xl border border-white/5">
                   <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
-                  <span><strong>Full Observability:</strong> Đo lường hệ thống với Prometheus, Grafana, Distributed Tracing Zipkin và load test k6.</span>
+                  <span><strong>Giám sát cơ bản:</strong> Làm quen với Prometheus, Grafana, Zipkin và chạy kịch bản test tải mẫu bằng k6 trên local.</span>
                 </div>
               </div>
 
@@ -1068,42 +1096,42 @@
                 <span class="px-2.5 py-1 rounded-md text-[11px] font-mono bg-dark-800 text-rose-300 border border-rose-500/20">RabbitMQ</span>
                 <span class="px-2.5 py-1 rounded-md text-[11px] font-mono bg-dark-800 text-rose-400 border border-rose-500/20">Redis</span>
                 <span class="px-2.5 py-1 rounded-md text-[11px] font-mono bg-dark-800 text-emerald-400 border border-emerald-500/20">Elasticsearch 8</span>
-                <span class="px-2.5 py-1 rounded-md text-[11px] font-mono bg-dark-800 text-indigo-300 border border-indigo-500/20">Docker &amp; CI/CD</span>
-                <span class="px-2.5 py-1 rounded-md text-[11px] font-mono bg-dark-800 text-slate-300 border border-white/10">VNPay &amp; GHN</span>
+                <span class="px-2.5 py-1 rounded-md text-[11px] font-mono bg-dark-800 text-indigo-300 border border-indigo-500/20">Docker &amp; CI</span>
+                <span class="px-2.5 py-1 rounded-md text-[11px] font-mono bg-dark-800 text-slate-300 border border-white/10">VNPay &amp; GHN Sandbox</span>
               </div>
 
             </div>
 
-            <!-- Project Actions & Quick Metrics -->
+            <!-- Project Actions & Quick Info -->
             <div class="lg:col-span-4 bg-dark-900/90 rounded-2xl p-5 border border-white/10 space-y-4">
               <div class="font-mono text-xs uppercase tracking-wider text-slate-400 pb-2 border-b border-white/10 flex items-center justify-between">
-                <span>Trạng thái dự án</span>
-                <span class="text-emerald-400 font-bold">READY</span>
+                <span>Phạm vi đồ án</span>
+                <span class="text-emerald-400 font-bold">LOCAL / DEMO</span>
               </div>
 
               <div class="space-y-2 text-xs font-mono">
                 <div class="flex justify-between py-1 border-b border-white/5">
-                  <span class="text-slate-400">Kiến trúc:</span>
+                  <span class="text-slate-400">Cấu trúc thực hành:</span>
                   <span class="text-white font-medium">Hexagonal / Modular</span>
                 </div>
                 <div class="flex justify-between py-1 border-b border-white/5">
-                  <span class="text-slate-400">Tích hợp thanh toán:</span>
+                  <span class="text-slate-400">Thanh toán mẫu:</span>
                   <span class="text-white font-medium">VNPay Sandbox</span>
                 </div>
                 <div class="flex justify-between py-1 border-b border-white/5">
-                  <span class="text-slate-400">Vận chuyển:</span>
-                  <span class="text-white font-medium">Giao Hàng Nhanh (GHN)</span>
+                  <span class="text-slate-400">Vận chuyển mẫu:</span>
+                  <span class="text-white font-medium">GHN Sandbox API</span>
                 </div>
                 <div class="flex justify-between py-1 border-b border-white/5">
-                  <span class="text-slate-400">Load Test Tool:</span>
-                  <span class="text-cyan-300 font-medium">Grafana k6</span>
+                  <span class="text-slate-400">Thử nghiệm tải:</span>
+                  <span class="text-cyan-300 font-medium">k6 (Local Script)</span>
                 </div>
               </div>
 
               <div class="pt-2 flex flex-col gap-2">
                 <a href="https://github.com/NhsPhu/Omni" target="_blank" rel="noreferrer" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-medium text-xs font-mono flex items-center justify-center gap-2 hover:opacity-95 shadow-md transition-all">
                   <i data-lucide="github" class="w-4 h-4"></i>
-                  <span>Xem Toàn Bộ Mã Nguồn</span>
+                  <span>Xem Mã Nguồn Trên GitHub</span>
                 </a>
               </div>
             </div>
@@ -1111,17 +1139,17 @@
           </div>
         </div>
 
-        <!-- PROJECT 2: MOVIE STREAMING SYSTEM (MICROSERVICES) -->
+        <!-- PROJECT 2: MOVIE STREAMING SYSTEM -->
         <div class="spotlight-card rounded-3xl p-6 sm:p-10 border border-white/10 relative overflow-hidden group">
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             <div class="lg:col-span-8 space-y-5">
               <div class="flex flex-wrap items-center gap-2.5">
                 <span class="px-3 py-1 rounded-full text-xs font-mono bg-purple-500/10 text-purple-300 border border-purple-500/30">
-                  MICROSERVICES ARCHITECTURE
+                  ĐỒ ÁN THỰC HÀNH
                 </span>
                 <span class="px-3 py-1 rounded-full text-xs font-mono bg-dark-800 text-slate-300 border border-white/10">
-                  Adaptive Bitrate Streaming (HLS)
+                  HLS Video Streaming · Local Docker
                 </span>
               </div>
 
@@ -1133,27 +1161,27 @@
                   </a>
                 </h3>
                 <p class="text-slate-300 text-sm sm:text-base leading-relaxed mt-2">
-                  Hệ thống truyền tải video đa nền tảng <strong class="text-white">(Web &amp; Android)</strong> sử dụng 
-                  chuẩn <strong class="text-purple-300">HLS Adaptive Streaming</strong> và dịch vụ AI gợi ý phim độc lập.
+                  Đồ án xem phim trên <strong class="text-white">Web &amp; Android</strong> nhằm thực hành chia nhỏ dịch vụ backend, 
+                  chuyển đổi video theo chuẩn <strong class="text-purple-300">HLS</strong> và kết nối thêm một service Python gợi ý phim cơ bản.
                 </p>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono text-slate-300 pt-1">
                 <div class="flex items-start gap-2 bg-dark-900/70 p-3 rounded-xl border border-white/5">
                   <i data-lucide="check" class="w-4 h-4 text-purple-400 shrink-0 mt-0.5"></i>
-                  <span><strong>FFmpeg Pipeline:</strong> Tự động transcode 4 độ phân giải (1080p, 720p, 480p, 360p) tạo file .m3u8 và TS segments.</span>
+                  <span><strong>FFmpeg:</strong> Thực hành dùng FFmpeg chuyển đổi video mẫu sang các mức 1080p–360p (.m3u8 &amp; TS segments).</span>
                 </div>
                 <div class="flex items-start gap-2 bg-dark-900/70 p-3 rounded-xl border border-white/5">
                   <i data-lucide="check" class="w-4 h-4 text-purple-400 shrink-0 mt-0.5"></i>
-                  <span><strong>AI Microservice (FastAPI):</strong> Hệ thống gợi ý phim thông minh bằng thuật toán Collaborative Filtering (Scikit-learn).</span>
+                  <span><strong>FastAPI Service:</strong> Thử nghiệm API gợi ý phim cơ bản bằng Collaborative Filtering (Scikit-learn) trên tập dữ liệu mẫu.</span>
                 </div>
                 <div class="flex items-start gap-2 bg-dark-900/70 p-3 rounded-xl border border-white/5">
                   <i data-lucide="check" class="w-4 h-4 text-purple-400 shrink-0 mt-0.5"></i>
-                  <span><strong>Cross-Platform Sync:</strong> Đồng bộ tiến độ xem phim thời gian thực giữa Web (React 18) và App Android (Kotlin MVVM ExoPlayer).</span>
+                  <span><strong>Web &amp; Android:</strong> Lưu và đồng bộ vị trí đang xem giữa Web (React 18) và App Android (Kotlin MVVM, ExoPlayer).</span>
                 </div>
                 <div class="flex items-start gap-2 bg-dark-900/70 p-3 rounded-xl border border-white/5">
                   <i data-lucide="check" class="w-4 h-4 text-purple-400 shrink-0 mt-0.5"></i>
-                  <span><strong>Containerized:</strong> Triển khai toàn bộ cụm dịch vụ thông qua Docker và Docker Compose.</span>
+                  <span><strong>Docker Compose:</strong> Đóng gói các service để dễ khởi chạy và demo trên máy cá nhân.</span>
                 </div>
               </div>
 
@@ -1170,10 +1198,10 @@
 
             <div class="lg:col-span-4 bg-dark-900/90 rounded-2xl p-5 border border-white/10 space-y-4">
               <div class="font-mono text-xs uppercase tracking-wider text-slate-400 pb-2 border-b border-white/10">
-                Kiến trúc Multi-Client
+                Mục tiêu thực hành
               </div>
               <p class="text-xs text-slate-400 font-mono leading-relaxed">
-                Thiết kế tách rời Backend Media Server, AI Microservice và Client Players giúp hệ thống dễ dàng mở rộng theo chiều ngang (Horizontal Scaling).
+                Làm quen việc kết nối nhiều client (Web &amp; Android) với cùng một REST API Backend và tách riêng service Python gợi ý phim.
               </p>
               <a href="https://github.com/NhsPhu/MovieFilm" target="_blank" rel="noreferrer" class="w-full py-2.5 px-4 rounded-xl bg-dark-800 hover:bg-dark-750 text-slate-200 hover:text-white font-mono text-xs border border-white/10 flex items-center justify-center gap-2 transition-all">
                 <i data-lucide="github" class="w-4 h-4"></i>
@@ -1192,7 +1220,7 @@
             <div class="space-y-4">
               <div class="flex items-center justify-between">
                 <span class="px-3 py-1 rounded-full text-xs font-mono bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
-                  BI &amp; MACHINE LEARNING
+                  ĐỒ ÁN DỮ LIỆU &amp; AI
                 </span>
                 <a href="https://github.com/NhsPhu/Pro-Sales-Analytics" target="_blank" rel="noreferrer" class="text-slate-400 hover:text-cyan-400">
                   <i data-lucide="external-link" class="w-4 h-4"></i>
@@ -1202,21 +1230,21 @@
               <h4 class="text-xl font-bold text-white">AI Sales Analysis Dashboard</h4>
               
               <p class="text-slate-300 text-sm leading-relaxed">
-                Hệ thống Business Intelligence tự động hóa phân tích dữ liệu bán hàng với pipeline ETL trích xuất và chuẩn hóa từ CSV/JSON, kết hợp dự báo chuỗi thời gian.
+                Đồ án thực hành trực quan hóa dữ liệu bán hàng từ file CSV/JSON, kết hợp thử nghiệm thư viện dự báo chuỗi thời gian và hỏi đáp bằng AI.
               </p>
 
               <div class="space-y-2 text-xs font-mono text-slate-300">
                 <div class="flex items-center gap-2">
                   <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-emerald-400"></i>
-                  <span>Dự báo doanh thu với <strong>Facebook Prophet (MAPE &lt; 8%)</strong></span>
+                  <span>Thử nghiệm dự báo doanh thu mẫu với <strong>Facebook Prophet</strong></span>
                 </div>
                 <div class="flex items-center gap-2">
                   <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-emerald-400"></i>
-                  <span>Tích hợp <strong>Groq API</strong> truy vấn dữ liệu bằng ngôn ngữ tự nhiên</span>
+                  <span>Thực hành tích hợp <strong>Groq API</strong> hỗ trợ hỏi đáp trên dữ liệu mẫu</span>
                 </div>
                 <div class="flex items-center gap-2">
                   <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-emerald-400"></i>
-                  <span>Dashboard trực quan tương tác với <strong>Streamlit &amp; Plotly</strong></span>
+                  <span>Vẽ biểu đồ tương tác cơ bản với <strong>Streamlit &amp; Plotly</strong></span>
                 </div>
               </div>
 
@@ -1242,7 +1270,7 @@
             <div class="space-y-4">
               <div class="flex items-center justify-between">
                 <span class="px-3 py-1 rounded-full text-xs font-mono bg-blue-500/10 text-blue-300 border border-blue-500/30">
-                  DESKTOP ERP SOFTWARE
+                  ĐỒ ÁN DESKTOP APP
                 </span>
                 <a href="https://github.com/NhsPhu/Bookstore" target="_blank" rel="noreferrer" class="text-slate-400 hover:text-cyan-400">
                   <i data-lucide="external-link" class="w-4 h-4"></i>
@@ -1252,21 +1280,21 @@
               <h4 class="text-xl font-bold text-white">Bookstore Manager</h4>
               
               <p class="text-slate-300 text-sm leading-relaxed">
-                Ứng dụng Desktop quản lý vận hành nhà sách hoàn chỉnh với giao diện hiện đại, quy trình kiểm soát kho chặt chẽ và báo cáo doanh thu theo ca làm việc.
+                Đồ án ứng dụng Desktop quản lý nhà sách cơ bản với các chức năng nhập kho, xuất bán, quản lý khách hàng và thống kê doanh thu theo ca.
               </p>
 
               <div class="space-y-2 text-xs font-mono text-slate-300">
                 <div class="flex items-center gap-2">
                   <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-blue-400"></i>
-                  <span>Quản lý nhập kho, tồn kho, xuất bán và khách hàng thân thiết</span>
+                  <span>Thực hành CRUD nhập kho, tồn kho, hóa đơn và khách hàng</span>
                 </div>
                 <div class="flex items-center gap-2">
                   <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-blue-400"></i>
-                  <span>Giao diện tùy biến cao với <strong>CustomTkinter</strong></span>
+                  <span>Xây dựng giao diện Desktop với <strong>CustomTkinter</strong></span>
                 </div>
                 <div class="flex items-center gap-2">
                   <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-blue-400"></i>
-                  <span>Lưu trữ dữ liệu toàn vẹn trên <strong>MySQL</strong> với transaction an toàn</span>
+                  <span>Thiết kế bảng và lưu trữ dữ liệu trên <strong>MySQL</strong></span>
                 </div>
               </div>
 
@@ -1274,7 +1302,7 @@
                 <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-dark-800 text-blue-300 border border-blue-500/20">Python</span>
                 <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-dark-800 text-cyan-300 border border-cyan-500/20">CustomTkinter</span>
                 <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-dark-800 text-amber-300 border border-amber-500/20">MySQL</span>
-                <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-dark-800 text-slate-300 border border-white/10">Desktop ERP</span>
+                <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-dark-800 text-slate-300 border border-white/10">Desktop App</span>
               </div>
             </div>
 
@@ -1297,13 +1325,13 @@
       <div class="text-center max-w-2xl mx-auto mb-8 space-y-3">
         <div class="inline-flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase tracking-wider">
           <i data-lucide="code-2" class="w-4 h-4"></i>
-          <span>Production-Tested Toolbelt</span>
+          <span>Tech Stack &amp; Learning</span>
         </div>
         <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-          Hệ Thống Kỹ Năng Kỹ Thuật
+          Kỹ Năng &amp; Công Nghệ Đã Làm Quen
         </h2>
         <p class="text-slate-400 text-sm">
-          Chỉ liệt kê các công nghệ đã được áp dụng trực tiếp vào dự án thực tế, không lý thuyết suông.
+          Các công nghệ mình đã học và thực hành qua đồ án đại học ở mức cơ bản – trung bình, sẵn sàng trau dồi thêm trong môi trường thực tế.
         </p>
       </div>
 
@@ -1369,7 +1397,7 @@
 
           <!-- Concise Vietnamese Interaction Hint -->
           <p class="text-[11px] sm:text-xs font-mono text-slate-400 text-center">
-            Kéo để xoay 360° · Click để tách/gộp · Rê chuột hoặc click vào từng ô để xem chi tiết
+            Kéo để xoay 360° · Click khoảng trống để tách/gộp · Click vào từng khối để xem chi tiết
           </p>
 
         </div>
@@ -1380,55 +1408,55 @@
         <div>
           <h3>Backend &amp; Security</h3>
           <ul>
-            <li>Java 17 &amp; Spring Boot 3 — Primary Core — Dự án: Omni Marketplace, Movie Streaming System</li>
-            <li>Spring Security &amp; JWT — Auth &amp; RBAC — Dự án: Omni Marketplace, Movie Streaming System</li>
-            <li>Hexagonal / Modular Architecture — Clean Domain — Dự án: Omni Marketplace</li>
-            <li>Python &amp; FastAPI — AI Microservices — Dự án: Movie Streaming System, AI Sales Analysis, Bookstore Manager</li>
+            <li>Java 17 &amp; Spring Boot 3 — Thực hành REST API — Đồ án: Omni Marketplace, Movie Streaming System</li>
+            <li>Spring Security &amp; JWT — Xác thực JWT cơ bản — Đồ án: Omni Marketplace, Movie Streaming System</li>
+            <li>Hexagonal / Modular Architecture — Tìm hiểu kiến trúc tách lớp — Đồ án: Omni Marketplace</li>
+            <li>Python &amp; FastAPI — Viết API cơ bản — Đồ án: Movie Streaming System, AI Sales Analysis, Bookstore Manager</li>
           </ul>
         </div>
         <div>
           <h3>Frontend &amp; Mobile</h3>
           <ul>
-            <li>Next.js 16 (App Router) — SSR &amp; Server Actions — Dự án: Omni Marketplace</li>
-            <li>React 19 &amp; TypeScript 5 — Type-safe UI — Dự án: Omni Marketplace, Movie Streaming System</li>
-            <li>TailwindCSS 4 &amp; Ant Design — Responsive Design — Dự án: Omni Marketplace</li>
-            <li>Kotlin Android (MVVM, ExoPlayer) — Native Mobile — Dự án: Movie Streaming System</li>
+            <li>Next.js 16 (App Router) — App Router cơ bản — Đồ án: Omni Marketplace</li>
+            <li>React 19 &amp; TypeScript 5 — Giao diện Web cơ bản — Đồ án: Omni Marketplace, Movie Streaming System</li>
+            <li>TailwindCSS 4 &amp; Ant Design — Styling &amp; Responsive — Đồ án: Omni Marketplace</li>
+            <li>Kotlin Android (MVVM, ExoPlayer) — App Android cơ bản — Đồ án: Movie Streaming System</li>
           </ul>
         </div>
         <div>
           <h3>Database &amp; Messaging</h3>
           <ul>
-            <li>RabbitMQ — Async Event Broker — Dự án: Omni Marketplace</li>
-            <li>Redis &amp; Bucket4j — Cache &amp; Rate Limit — Dự án: Omni Marketplace</li>
-            <li>Elasticsearch 8 — Full-Text Search — Dự án: Omni Marketplace</li>
-            <li>PostgreSQL &amp; MySQL — RDBMS &amp; ACID — Dự án: Omni Marketplace (PostgreSQL), Bookstore Manager (MySQL)</li>
+            <li>RabbitMQ — Làm quen Message Queue — Đồ án: Omni Marketplace</li>
+            <li>Redis &amp; Bucket4j — Caching cơ bản — Đồ án: Omni Marketplace</li>
+            <li>Elasticsearch 8 — Tìm kiếm cơ bản — Đồ án: Omni Marketplace</li>
+            <li>PostgreSQL &amp; MySQL — Truy vấn &amp; Thiết kế bảng — Đồ án: Omni Marketplace (PostgreSQL), Bookstore Manager (MySQL)</li>
           </ul>
         </div>
         <div>
           <h3>DevOps &amp; Observability</h3>
           <ul>
-            <li>Docker &amp; Docker Compose — Containerization — Dự án: Omni Marketplace, Movie Streaming System</li>
-            <li>Prometheus &amp; Grafana — Metrics Telemetry — Dự án: Omni Marketplace</li>
-            <li>Distributed Tracing (Zipkin) — Trace ID &amp; Span — Dự án: Omni Marketplace</li>
-            <li>GitHub Actions &amp; k6 — CI/CD &amp; Load Test — Dự án: Omni Marketplace</li>
+            <li>Docker &amp; Docker Compose — Đóng gói môi trường local — Đồ án: Omni Marketplace, Movie Streaming System</li>
+            <li>Prometheus &amp; Grafana — Làm quen giám sát cơ bản — Đồ án: Omni Marketplace</li>
+            <li>Distributed Tracing (Zipkin) — Tìm hiểu Tracing — Đồ án: Omni Marketplace</li>
+            <li>GitHub Actions &amp; k6 — CI cơ bản — Đồ án: Omni Marketplace</li>
           </ul>
         </div>
         <div>
           <h3>Integration &amp; Media</h3>
           <ul>
-            <li>VNPay &amp; GHN APIs — E-commerce Services — Dự án: Omni Marketplace</li>
-            <li>FFmpeg Media Transcoding — HLS Segmentation — Dự án: Movie Streaming System</li>
-            <li>Groq API &amp; Facebook Prophet — AI &amp; Forecasting — Dự án: AI Sales Analysis Dashboard</li>
-            <li>Cloudinary &amp; Sentry — Assets &amp; Errors — Dự án: Omni Marketplace</li>
+            <li>VNPay &amp; GHN APIs — Tích hợp Sandbox đồ án — Đồ án: Omni Marketplace</li>
+            <li>FFmpeg Media Transcoding — Chuyển đổi video cơ bản — Đồ án: Movie Streaming System</li>
+            <li>Groq API &amp; Facebook Prophet — Thử nghiệm AI / Dự báo — Đồ án: AI Sales Analysis Dashboard</li>
+            <li>Cloudinary &amp; Sentry — Upload ảnh &amp; Log lỗi — Đồ án: Omni Marketplace</li>
           </ul>
         </div>
         <div>
           <h3>Đang Nghiên Cứu Sâu</h3>
           <ul>
-            <li>Kubernetes (K8s) — Container Orchestration — Đang nghiên cứu (Roadmap)</li>
-            <li>gRPC &amp; Protobuf — Inter-service RPC — Đang nghiên cứu (Roadmap)</li>
-            <li>System Design Patterns — Saga, Outbox, CQRS — Đang nghiên cứu (Roadmap)</li>
-            <li>Unit &amp; Integration Testing — JUnit 5, Mockito — Đang nghiên cứu (Roadmap)</li>
+            <li>Kubernetes (K8s) — Đang tìm hiểu cơ bản — Đang nghiên cứu (Roadmap)</li>
+            <li>gRPC &amp; Protobuf — Đang tìm hiểu cơ bản — Đang nghiên cứu (Roadmap)</li>
+            <li>System Design Patterns — Đang tìm hiểu cơ bản — Đang nghiên cứu (Roadmap)</li>
+            <li>Unit &amp; Integration Testing — Đang tìm hiểu cơ bản — Đang nghiên cứu (Roadmap)</li>
           </ul>
         </div>
       </div>
@@ -1443,18 +1471,18 @@
         <div class="lg:col-span-6 space-y-6">
           <div class="inline-flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase tracking-wider">
             <i data-lucide="user" class="w-4 h-4"></i>
-            <span>Engineering Identity</span>
+            <span>About Me</span>
           </div>
           <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
             Về Tôi &amp; Mục Tiêu Nghề Nghiệp
           </h2>
           
           <p class="text-slate-300 leading-relaxed text-sm sm:text-base">
-            Chào nhà tuyển dụng và đồng nghiệp kỹ thuật! Mình là <strong class="text-white">Nguyễn Hồ Sỹ Phú</strong> (sinh năm 2005), hiện đang sinh sống và học tập tại <strong class="text-cyan-300">Quận Gò Vấp, TP. Hồ Chí Minh</strong>.
+            Chào anh/chị nhà tuyển dụng và các anh/chị kỹ thuật! Mình là <strong class="text-white">Nguyễn Hồ Sỹ Phú</strong> (sinh năm 2005), sinh viên mới ra trường ngành Kỹ thuật Phần mềm, hiện đang sinh sống tại <strong class="text-cyan-300">Quận Gò Vấp, TP. Hồ Chí Minh</strong>.
           </p>
 
           <p class="text-slate-400 leading-relaxed text-sm sm:text-base">
-            Với nền tảng lập trình vững chắc từ hệ thống Monolith đến Microservices, mình đam mê giải quyết các bài toán kỹ thuật phức tạp: tối ưu thời gian phản hồi API, thiết kế kiến trúc thông điệp tin cậy, đồng bộ dữ liệu giữa các dịch vụ và xây dựng các sản phẩm thực tế có khả năng mở rộng.
+            Là sinh viên mới tốt nghiệp nên mình chưa có nhiều kinh nghiệm làm việc thực tế tại doanh nghiệp. Tuy nhiên, mình rất chủ động tự học và thực hành qua các đồ án cá nhân với Java Spring Boot, Next.js, cơ sở dữ liệu và Docker, đồng thời luôn cầu thị và mong muốn được học hỏi quy trình chuẩn từ các anh/chị Senior trong môi trường thực tế.
           </p>
 
           <!-- Commitment Box -->
@@ -1464,7 +1492,7 @@
               <span>Mục tiêu trước mắt</span>
             </div>
             <p class="text-xs font-mono text-slate-300 leading-relaxed">
-              Gia nhập đội ngũ kỹ thuật tại vị trí <strong class="text-emerald-400">Intern / Fresher Fullstack hoặc Backend Developer</strong>, sẵn sàng tiếp thu văn hóa công ty, học hỏi từ các Senior/Lead và đóng góp giá trị kỹ thuật bền vững.
+              Tìm kiếm cơ hội <strong class="text-emerald-400">Intern / Fresher Fullstack hoặc Backend Developer</strong> để rèn luyện kỹ năng thực tế, làm quen quy trình phát triển sản phẩm và từng bước đóng góp giá trị cho đội ngũ.
             </p>
           </div>
 
@@ -1495,7 +1523,7 @@
               <div class="relative group">
                 <span class="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-cyan-400 ring-4 ring-dark-900"></span>
                 <div class="space-y-1">
-                  <span class="font-mono text-xs text-cyan-400">2023 — 2026 (Hiện tại)</span>
+                  <span class="font-mono text-xs text-cyan-400">2023 — 2026</span>
                   <h4 class="text-base font-bold text-white">Đại học Gia Định</h4>
                   <p class="text-xs font-mono text-slate-300">Chuyên ngành: Kỹ thuật Phần mềm (Software Engineering)</p>
                   <p class="text-xs font-mono text-emerald-400 font-semibold mt-1">GPA: 7.29 / 10</p>
@@ -1507,9 +1535,9 @@
                 <span class="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-indigo-500 ring-4 ring-dark-900"></span>
                 <div class="space-y-1">
                   <span class="font-mono text-xs text-indigo-400">2024 — 2025</span>
-                  <h4 class="text-base font-bold text-white">Nghiên Cứu Hệ Thống Phân Tán &amp; Backend Thực Chiến</h4>
+                  <h4 class="text-base font-bold text-white">Tự Học &amp; Thực Hành Qua Đồ Án Cá Nhân</h4>
                   <p class="text-xs text-slate-400 leading-relaxed">
-                    Xây dựng hoàn chỉnh kiến trúc Omni Marketplace và Movie Streaming System, giải quyết các bài toán I/O bất đồng bộ và streaming video.
+                    Xây dựng các đồ án Omni Marketplace, Movie Streaming System, AI Sales Dashboard và Bookstore Manager để rèn luyện kỹ năng lập trình Fullstack &amp; Backend.
                   </p>
                 </div>
               </div>
@@ -1518,10 +1546,10 @@
               <div class="relative group">
                 <span class="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-emerald-500 ring-4 ring-dark-900"></span>
                 <div class="space-y-1">
-                  <span class="font-mono text-xs text-emerald-400">2026</span>
-                  <h4 class="text-base font-bold text-white">Sẵn Sàng Gia Nhập Doanh Nghiệp</h4>
+                  <span class="font-mono text-xs text-emerald-400">2026 — Hiện tại</span>
+                  <h4 class="text-base font-bold text-white">Mới Ra Trường — Tìm Kiếm Cơ Hội Intern / Fresher</h4>
                   <p class="text-xs text-slate-400 leading-relaxed">
-                    Tập trung toàn thời gian cho vai trò kỹ sư phần mềm thực tế, làm việc tại văn phòng (On-site) hoặc Hybrid tại TP. Hồ Chí Minh.
+                    Sẵn sàng làm việc toàn thời gian (On-site / Hybrid) tại TP. Hồ Chí Minh, mong muốn được học hỏi thực tế và phát triển cùng doanh nghiệp.
                   </p>
                 </div>
               </div>
@@ -1547,11 +1575,11 @@
             </div>
 
             <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
-              Sẵn Sàng Trao Đổi Về Cơ Hội Hợp Tác?
+              Rất Mong Được Trao Đổi Về Cơ Hội Thực Tập / Fresher
             </h2>
 
             <p class="text-slate-400 text-sm sm:text-base leading-relaxed">
-              Bạn đang tìm kiếm một lập trình viên trẻ đầy nhiệt huyết, nắm vững nguyên lý thiết kế backend và không ngại thử thách? Hãy kết nối với mình ngay hôm nay.
+              Nếu anh/chị đang tìm kiếm một bạn trẻ mới ra trường chịu khó học hỏi, có nền tảng lập trình web/backend cơ bản và sẵn sàng tiếp thu góp ý, rất mong được kết nối với anh/chị.
             </p>
 
             <div class="space-y-3 font-mono text-xs pt-2">
@@ -1651,17 +1679,17 @@
           P
         </div>
         <div class="text-xs text-slate-400 font-mono">
-          © 2026 Nguyễn Hồ Sỹ Phú. Built with passion &amp; high precision.
+          © 2026 Nguyễn Hồ Sỹ Phú · Fresh Graduate Portfolio (Intern / Fresher).
         </div>
       </div>
 
       <div class="flex items-center gap-6 text-xs font-mono text-slate-400">
         <span class="flex items-center gap-1.5 text-emerald-400">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          System Status: Operational
+          Open to Intern / Fresher
         </span>
         <a href="#about" class="hover:text-white transition-colors">Về tôi</a>
-        <a href="#projects" class="hover:text-white transition-colors">Dự án</a>
+        <a href="#projects" class="hover:text-white transition-colors">Đồ án</a>
         <a href="#contact" class="hover:text-white transition-colors">Liên hệ</a>
       </div>
 
@@ -1754,12 +1782,12 @@
 
     // Terminal Commands Logic
     const COMMANDS = {
-      help: () => `Danh sách lệnh khả dụng:\n- neofetch  : Hiển thị thông tin hệ thống của Phú\n- omni      : Chi tiết kiến trúc dự án Flagship Omni B2B2C\n- moviefilm : Chi tiết dự án Streaming Microservices\n- sales     : Chi tiết dự án AI Sales Analysis Dashboard\n- skills    : Liệt kê toàn bộ tech stack chính\n- contact   : Lấy email, số điện thoại, LinkedIn, GitHub\n- clear     : Dọn sạch màn hình terminal`,
-      neofetch: () => `OS: Obsidian Engineer v2026\nHost: Software Engineer (Fresher / Intern)\nKernel: Java 17 · Spring Boot 3 · Next.js 16\nUptime: 3+ years coding, always building\nStatus: Ready to interview & onboard`,
-      omni: () => `[DỰ ÁN TRỌNG TÂM: OMNI MARKETPLACE]\n- Mô hình: B2B2C Multi-vendor e-commerce\n- Kiến trúc: Modular Monolith + Hexagonal Architecture\n- Core: Java 17, Spring Boot 3, Next.js 16, TypeScript 5\n- Event: RabbitMQ (Async Order/Payment/Notification)\n- Caching: Redis + Bucket4j rate limiting (~60% DB load reduction)\n- Search: Elasticsearch 8 full-text & dynamic facets\n- Observability: Prometheus + Grafana + Zipkin + k6\n- GitHub: https://github.com/NhsPhu/Omni`,
-      moviefilm: () => `[DỰ ÁN: MOVIE STREAMING SYSTEM]\n- Kiến trúc: Microservices\n- Streaming: HLS Adaptive Bitrate (FFmpeg 1080p -> 360p)\n- Multi-client: Kotlin Android (ExoPlayer) + React 18 Web\n- AI: Python FastAPI Collaborative Filtering (Scikit-learn)\n- GitHub: https://github.com/NhsPhu/MovieFilm`,
-      sales: () => `[DỰ ÁN: AI SALES ANALYSIS DASHBOARD]\n- Mục tiêu: Business Intelligence tự động hóa\n- Công nghệ: Python, Streamlit, Plotly, Groq API (NLP Query), Facebook Prophet (MAPE < 8%)\n- GitHub: https://github.com/NhsPhu/Pro-Sales-Analytics`,
-      skills: () => `[TECH STACK MATRIX]\n- Backend: Java 17, Spring Boot 3, Spring Security, JWT, Python, FastAPI\n- Frontend: Next.js 16, React 19, TypeScript 5, TailwindCSS 4, Kotlin Android\n- Database/Cache: PostgreSQL, MySQL, Redis, Elasticsearch 8\n- Queue: RabbitMQ\n- DevOps: Docker, Docker Compose, GitHub Actions, Prometheus, Grafana, Zipkin`,
+      help: () => `Danh sách lệnh khả dụng:\n- neofetch  : Hiển thị thông tin cơ bản của Phú\n- omni      : Chi tiết đồ án cá nhân Omni Marketplace\n- moviefilm : Chi tiết đồ án thực hành Movie Streaming System\n- sales     : Chi tiết đồ án AI Sales Analysis Dashboard\n- skills    : Các công nghệ đã làm quen ở mức Intern / Fresher\n- contact   : Lấy email, số điện thoại, LinkedIn, GitHub\n- clear     : Dọn sạch màn hình terminal`,
+      neofetch: () => `OS: Phu.dev Portfolio v2026\nHost: Fresh Graduate (Intern / Fresher)\nStack: Java 17 · Spring Boot 3 · Next.js 16\nUptime: Mới ra trường (2023–2026), chủ động tự học\nStatus: Sẵn sàng phỏng vấn vị trí Intern / Fresher`,
+      omni: () => `[ĐỒ ÁN CÁ NHÂN: OMNI MARKETPLACE]\n- Mô hình: TMĐT B2B2C chạy trên môi trường local / sandbox\n- Cấu trúc thực hành: Modular Monolith + Hexagonal Architecture\n- Core: Java 17, Spring Boot 3, Next.js 16, TypeScript 5\n- Queue: Làm quen RabbitMQ cho luồng đặt hàng/thông báo bất đồng bộ\n- Cache: Thực hành Redis cache & Bucket4j giới hạn tần suất request\n- Search: Tìm kiếm sản phẩm cơ bản với Elasticsearch 8\n- Monitoring: Làm quen Prometheus, Grafana, Zipkin, k6 trên local\n- GitHub: https://github.com/NhsPhu/Omni`,
+      moviefilm: () => `[ĐỒ ÁN THỰC HÀNH: MOVIE STREAMING SYSTEM]\n- Mục tiêu: Làm quen tách dịch vụ backend & streaming video HLS\n- Video: Chuyển đổi video mẫu 1080p -> 360p bằng FFmpeg\n- Client: App Android (Kotlin, ExoPlayer) + Web (React 18)\n- AI: Thử nghiệm FastAPI Collaborative Filtering trên dữ liệu mẫu\n- GitHub: https://github.com/NhsPhu/MovieFilm`,
+      sales: () => `[ĐỒ ÁN DỮ LIỆU: AI SALES ANALYSIS DASHBOARD]\n- Mục tiêu: Thực hành trực quan hóa & phân tích dữ liệu bán hàng mẫu\n- Công nghệ: Python, Streamlit, Plotly, Groq API, Facebook Prophet\n- GitHub: https://github.com/NhsPhu/Pro-Sales-Analytics`,
+      skills: () => `[CÔNG NGHỆ ĐÃ LÀM QUEN — MỨC INTERN / FRESHER]\n- Backend: Java 17, Spring Boot 3, Spring Security/JWT cơ bản, Python FastAPI\n- Frontend: Next.js 16, React 19, TypeScript 5, TailwindCSS 4, Kotlin Android cơ bản\n- Database/Cache: PostgreSQL, MySQL, làm quen Redis & Elasticsearch 8\n- Queue & Tool: Làm quen RabbitMQ, Docker Compose, GitHub Actions cơ bản`,
       contact: () => `[THÔNG TIN LIÊN HỆ NGUYỄN HỒ SỸ PHÚ]\n- Email: nguyenhosyphu@gmail.com\n- Điện thoại: 0337843118\n- GitHub: https://github.com/NhsPhu\n- LinkedIn: https://www.linkedin.com/in/nguy%E1%BB%85n-h%E1%BB%93-s%E1%BB%B9-ph%C3%BA-384701437/\n- Facebook: https://www.facebook.com/Nh.Shyfu/`,
       clear: () => null
     };
@@ -1858,22 +1886,22 @@
     // ARCHITECTURE SIMULATOR LOGIC
     const SCENARIOS = {
       order: [
-        { node: 'nodeClient', text: 'Client gửi POST /api/v1/orders (Next.js/Android) kèm JWT token.', status: 'REQUESTING' },
-        { node: 'nodeBackend', text: 'Spring Boot 3 Core: Validate token, trừ kho tạm thời, lưu pending order.', status: 'PROCESSING' },
-        { node: 'nodeBroker', text: 'Bắn message vào RabbitMQ "order.exchange" -> Routing async sang worker.', status: 'QUEUED' },
-        { node: 'nodeStorage', text: 'Worker xử lý trừ stock DB, gọi VNPay & GHN API, cập nhật order = CONFIRMED.', status: 'SUCCESS' }
+        { node: 'nodeClient', text: 'Client gửi POST /api/v1/orders kèm JWT token trên môi trường demo.', status: 'REQUESTING' },
+        { node: 'nodeBackend', text: 'Spring Boot 3 kiểm tra token, xác thực dữ liệu và lưu đơn hàng trạng thái pending.', status: 'PROCESSING' },
+        { node: 'nodeBroker', text: 'Đẩy message vào RabbitMQ "order.exchange" để worker xử lý bất đồng bộ.', status: 'QUEUED' },
+        { node: 'nodeStorage', text: 'Worker cập nhật tồn kho DB, gọi VNPay & GHN Sandbox và chuyển đơn sang CONFIRMED.', status: 'SUCCESS' }
       ],
       search: [
-        { node: 'nodeClient', text: 'User gõ từ khóa "Laptop Gaming" tại thanh tìm kiếm.', status: 'SEARCHING' },
-        { node: 'nodeBackend', text: 'Spring Boot Gateway kiểm tra cache Redis xem có kết quả trước không.', status: 'CACHE CHECK' },
-        { node: 'nodeBroker', text: 'Cache Miss -> Truy vấn trực tiếp Elasticsearch 8 cluster.', status: 'ES QUERY' },
-        { node: 'nodeStorage', text: 'Elasticsearch 8 trả về multi-facet filter trong 18ms -> Lưu cache Redis.', status: 'COMPLETED' }
+        { node: 'nodeClient', text: 'Người dùng nhập từ khóa "Laptop Gaming" trên thanh tìm kiếm.', status: 'SEARCHING' },
+        { node: 'nodeBackend', text: 'Spring Boot kiểm tra bộ nhớ đệm Redis xem đã lưu kết quả truy vấn trước đó chưa.', status: 'CACHE CHECK' },
+        { node: 'nodeBroker', text: 'Cache Miss -> Gửi truy vấn tìm kiếm sang Elasticsearch 8 chạy trên local.', status: 'ES QUERY' },
+        { node: 'nodeStorage', text: 'Elasticsearch 8 trả về danh sách lọc phù hợp và lưu cache vào Redis cho lần gọi sau.', status: 'COMPLETED' }
       ],
       cache: [
-        { node: 'nodeClient', text: 'Client gửi 120 requests liên tiếp trong 5 giây.', status: 'BURST LOAD' },
-        { node: 'nodeBackend', text: 'Bucket4j Interceptor chặn tại tầng Filter của Spring Security.', status: 'RATE LIMITING' },
-        { node: 'nodeBroker', text: 'Redis phân tán đếm token bucket: Chấp nhận 50 req, trả 429 Too Many Requests cho 70 req còn lại.', status: 'PROTECTED' },
-        { node: 'nodeStorage', text: 'Database hoàn toàn an toàn, không bị nghẽn CPU hoặc connection pool.', status: 'SHIELDED' }
+        { node: 'nodeClient', text: 'Gửi nhiều request liên tiếp để thử nghiệm giới hạn tần suất (rate limit).', status: 'TEST LOAD' },
+        { node: 'nodeBackend', text: 'Bucket4j Interceptor kiểm tra hạn mức tại tầng Filter của Spring Security.', status: 'RATE LIMITING' },
+        { node: 'nodeBroker', text: 'Redis đếm token bucket: Chấp nhận các request hợp lệ và trả về 429 cho các request vượt ngưỡng.', status: 'LIMITED' },
+        { node: 'nodeStorage', text: 'Hạn chế gửi thừa truy vấn xuống cơ sở dữ liệu khi có nhiều request lặp lại.', status: 'PROTECTED' }
       ]
     };
 
@@ -2202,10 +2230,10 @@
           targetRot: { x: 0, y: 0 },
           normal: [0, 0, 1],
           skills: [
-            { name: 'Java 17 & Spring Boot 3', short: 'Spring Boot 3', icon: 'cpu', label: 'Primary Core', projects: 'Omni Marketplace, Movie Streaming System' },
-            { name: 'Spring Security & JWT', short: 'Security & JWT', icon: 'shield-check', label: 'Auth & RBAC', projects: 'Omni Marketplace, Movie Streaming System' },
-            { name: 'Hexagonal / Modular Architecture', short: 'Hexagonal Arch', icon: 'hexagon', label: 'Clean Domain', projects: 'Omni Marketplace' },
-            { name: 'Python & FastAPI', short: 'FastAPI', icon: 'zap', label: 'AI Microservices', projects: 'Movie Streaming System, AI Sales Analysis, Bookstore Manager' }
+            { name: 'Java 17 & Spring Boot 3', short: 'Spring Boot 3', icon: 'cpu', label: 'Thực hành REST API', projects: 'Omni Marketplace, Movie Streaming System' },
+            { name: 'Spring Security & JWT', short: 'Security & JWT', icon: 'shield-check', label: 'Xác thực JWT cơ bản', projects: 'Omni Marketplace, Movie Streaming System' },
+            { name: 'Hexagonal / Modular Architecture', short: 'Hexagonal Arch', icon: 'hexagon', label: 'Tìm hiểu kiến trúc tách lớp', projects: 'Omni Marketplace' },
+            { name: 'Python & FastAPI', short: 'FastAPI', icon: 'zap', label: 'Viết API cơ bản', projects: 'Movie Streaming System, AI Sales Analysis, Bookstore Manager' }
           ]
         },
         {
@@ -2218,10 +2246,10 @@
           targetRot: { x: 0, y: -90 },
           normal: [1, 0, 0],
           skills: [
-            { name: 'Next.js 16 (App Router)', short: 'Next.js 16', icon: 'globe', label: 'SSR & Server Actions', projects: 'Omni Marketplace' },
-            { name: 'React 19 & TypeScript 5', short: 'React & TS', icon: 'code-2', label: 'Type-safe UI', projects: 'Omni Marketplace, Movie Streaming System' },
-            { name: 'TailwindCSS 4 & Ant Design', short: 'TailwindCSS 4', icon: 'palette', label: 'Responsive Design', projects: 'Omni Marketplace' },
-            { name: 'Kotlin Android (MVVM, ExoPlayer)', short: 'Kotlin Android', icon: 'smartphone', label: 'Native Mobile', projects: 'Movie Streaming System' }
+            { name: 'Next.js 16 (App Router)', short: 'Next.js 16', icon: 'globe', label: 'App Router cơ bản', projects: 'Omni Marketplace' },
+            { name: 'React 19 & TypeScript 5', short: 'React & TS', icon: 'code-2', label: 'Giao diện Web cơ bản', projects: 'Omni Marketplace, Movie Streaming System' },
+            { name: 'TailwindCSS 4 & Ant Design', short: 'TailwindCSS 4', icon: 'palette', label: 'Styling & Responsive', projects: 'Omni Marketplace' },
+            { name: 'Kotlin Android (MVVM, ExoPlayer)', short: 'Kotlin Android', icon: 'smartphone', label: 'App Android cơ bản', projects: 'Movie Streaming System' }
           ]
         },
         {
@@ -2234,10 +2262,10 @@
           targetRot: { x: 0, y: 180 },
           normal: [0, 0, -1],
           skills: [
-            { name: 'RabbitMQ', short: 'RabbitMQ', icon: 'shuffle', label: 'Async Event Broker', projects: 'Omni Marketplace' },
-            { name: 'Redis & Bucket4j', short: 'Redis & Bucket4j', icon: 'flame', label: 'Cache & Rate Limit', projects: 'Omni Marketplace' },
-            { name: 'Elasticsearch 8', short: 'Elasticsearch 8', icon: 'search', label: 'Full-Text Search', projects: 'Omni Marketplace' },
-            { name: 'PostgreSQL & MySQL', short: 'Postgres & MySQL', icon: 'database', label: 'RDBMS & ACID', projects: 'Omni Marketplace (PostgreSQL), Bookstore Manager (MySQL)' }
+            { name: 'RabbitMQ', short: 'RabbitMQ', icon: 'shuffle', label: 'Làm quen Message Queue', projects: 'Omni Marketplace' },
+            { name: 'Redis & Bucket4j', short: 'Redis & Bucket4j', icon: 'flame', label: 'Caching cơ bản', projects: 'Omni Marketplace' },
+            { name: 'Elasticsearch 8', short: 'Elasticsearch 8', icon: 'search', label: 'Tìm kiếm cơ bản', projects: 'Omni Marketplace' },
+            { name: 'PostgreSQL & MySQL', short: 'Postgres & MySQL', icon: 'database', label: 'Truy vấn & Thiết kế bảng', projects: 'Omni Marketplace (PostgreSQL), Bookstore Manager (MySQL)' }
           ]
         },
         {
@@ -2250,10 +2278,10 @@
           targetRot: { x: 0, y: 90 },
           normal: [-1, 0, 0],
           skills: [
-            { name: 'Docker & Docker Compose', short: 'Docker', icon: 'box', label: 'Containerization', projects: 'Omni Marketplace, Movie Streaming System' },
-            { name: 'Prometheus & Grafana', short: 'Prometheus', icon: 'bar-chart-3', label: 'Metrics Telemetry', projects: 'Omni Marketplace' },
-            { name: 'Distributed Tracing (Zipkin)', short: 'Zipkin Tracing', icon: 'git-branch', label: 'Trace ID & Span', projects: 'Omni Marketplace' },
-            { name: 'GitHub Actions & k6', short: 'CI/CD & k6', icon: 'git-merge', label: 'CI/CD & Load Test', projects: 'Omni Marketplace' }
+            { name: 'Docker & Docker Compose', short: 'Docker', icon: 'box', label: 'Đóng gói môi trường local', projects: 'Omni Marketplace, Movie Streaming System' },
+            { name: 'Prometheus & Grafana', short: 'Prometheus', icon: 'bar-chart-3', label: 'Làm quen giám sát cơ bản', projects: 'Omni Marketplace' },
+            { name: 'Distributed Tracing (Zipkin)', short: 'Zipkin Tracing', icon: 'git-branch', label: 'Tìm hiểu Tracing', projects: 'Omni Marketplace' },
+            { name: 'GitHub Actions & k6', short: 'CI/CD & k6', icon: 'git-merge', label: 'CI cơ bản', projects: 'Omni Marketplace' }
           ]
         },
         {
@@ -2266,10 +2294,10 @@
           targetRot: { x: -90, y: 0 },
           normal: [0, -1, 0],
           skills: [
-            { name: 'VNPay & GHN APIs', short: 'VNPay & GHN', icon: 'credit-card', label: 'E-commerce Services', projects: 'Omni Marketplace' },
-            { name: 'FFmpeg Media Transcoding', short: 'FFmpeg HLS', icon: 'film', label: 'HLS Segmentation', projects: 'Movie Streaming System' },
-            { name: 'Groq API & Facebook Prophet', short: 'Groq & Prophet', icon: 'sparkles', label: 'AI & Forecasting', projects: 'AI Sales Analysis Dashboard' },
-            { name: 'Cloudinary & Sentry', short: 'Cloudinary/Sentry', icon: 'cloud', label: 'Assets & Errors', projects: 'Omni Marketplace' }
+            { name: 'VNPay & GHN APIs', short: 'VNPay & GHN', icon: 'credit-card', label: 'Tích hợp Sandbox đồ án', projects: 'Omni Marketplace' },
+            { name: 'FFmpeg Media Transcoding', short: 'FFmpeg HLS', icon: 'film', label: 'Chuyển đổi video cơ bản', projects: 'Movie Streaming System' },
+            { name: 'Groq API & Facebook Prophet', short: 'Groq & Prophet', icon: 'sparkles', label: 'Thử nghiệm AI / Dự báo', projects: 'AI Sales Analysis Dashboard' },
+            { name: 'Cloudinary & Sentry', short: 'Cloudinary/Sentry', icon: 'cloud', label: 'Upload ảnh & Log lỗi', projects: 'Omni Marketplace' }
           ]
         },
         {
@@ -2282,10 +2310,10 @@
           targetRot: { x: 90, y: 0 },
           normal: [0, 1, 0],
           skills: [
-            { name: 'Kubernetes (K8s)', short: 'Kubernetes', icon: 'network', label: 'Container Orchestration', projects: 'Đang nghiên cứu (Roadmap)' },
-            { name: 'gRPC & Protobuf', short: 'gRPC', icon: 'radio', label: 'Inter-service RPC', projects: 'Đang nghiên cứu (Roadmap)' },
-            { name: 'System Design Patterns', short: 'System Design', icon: 'layers', label: 'Saga, Outbox, CQRS', projects: 'Đang nghiên cứu (Roadmap)' },
-            { name: 'Unit & Integration Testing', short: 'JUnit & Mockito', icon: 'check-circle-2', label: 'JUnit 5, Mockito', projects: 'Đang nghiên cứu (Roadmap)' }
+            { name: 'Kubernetes (K8s)', short: 'Kubernetes', icon: 'network', label: 'Đang tìm hiểu cơ bản', projects: 'Đang nghiên cứu (Roadmap)' },
+            { name: 'gRPC & Protobuf', short: 'gRPC', icon: 'radio', label: 'Đang tìm hiểu cơ bản', projects: 'Đang nghiên cứu (Roadmap)' },
+            { name: 'System Design Patterns', short: 'System Design', icon: 'layers', label: 'Đang tìm hiểu cơ bản', projects: 'Đang nghiên cứu (Roadmap)' },
+            { name: 'Unit & Integration Testing', short: 'JUnit & Mockito', icon: 'check-circle-2', label: 'Đang tìm hiểu cơ bản', projects: 'Đang nghiên cứu (Roadmap)' }
           ]
         }
       ];
@@ -2417,21 +2445,13 @@
             </span>
             <span class="skill-tile-name">${skill.short}</span>
           `;
-          tileEl.addEventListener('pointerenter', (e) => {
-            if (e.pointerType !== 'mouse' || !isExploded || isDragging || isPointerDown) return;
-            handleTileHoverEnter(tileKey);
-          });
-          tileEl.addEventListener('pointerleave', (e) => {
-            if (e.pointerType !== 'mouse') return;
-            handleTileHoverLeave(tileKey);
-          });
           tileEl.addEventListener('click', (e) => {
             // Support keyboard activation (Enter / Space) without double-firing on pointer clicks
             if (e.detail === 0) {
-              if (!isExploded) {
-                setExploded(true);
+              if (activeTooltipKey === tileKey) {
+                closeTooltip();
               } else {
-                openTooltip(tileKey, true);
+                openTooltip(tileKey);
               }
             }
           });
@@ -2467,11 +2487,7 @@
       let velX = 0;
       let velY = 0;
       let isExploded = false;
-      let pinnedTileKey = null;
-      let hoveredTileKey = null;
       let activeTooltipKey = null;
-      let isPointerOverTooltip = false;
-      let hoverHideTimer = null;
       let activeFaceIndex = 0;
 
       // Pointer drag state
@@ -2483,61 +2499,9 @@
       let travelDist = 0;
       let lastInteractionTime = 0;
       let downTileKey = null;
-      let downInsideCube = false;
 
       // Smooth face-focus animation state
       let focusAnim = null;
-
-      function clearHoverHideTimer() {
-        if (hoverHideTimer !== null) {
-          clearTimeout(hoverHideTimer);
-          hoverHideTimer = null;
-        }
-      }
-
-      function scheduleHoverHide() {
-        clearHoverHideTimer();
-        if (pinnedTileKey) return;
-        hoverHideTimer = setTimeout(() => {
-          hoverHideTimer = null;
-          if (!pinnedTileKey && !hoveredTileKey && !isPointerOverTooltip) {
-            closeTooltip();
-          }
-        }, 200);
-      }
-
-      function setHoveredTile(nextKey) {
-        if (hoveredTileKey && tileMap.has(hoveredTileKey)) {
-          tileMap.get(hoveredTileKey).el.classList.remove('is-hovered');
-        }
-        hoveredTileKey = nextKey;
-        if (hoveredTileKey && tileMap.has(hoveredTileKey)) {
-          tileMap.get(hoveredTileKey).el.classList.add('is-hovered');
-        }
-      }
-
-      function handleTileHoverEnter(tileKey) {
-        clearHoverHideTimer();
-        // Catch/freeze residual drag inertia or face-focus motion so the hovered tile never slides away
-        velX = 0;
-        velY = 0;
-        focusAnim = null;
-        setHoveredTile(tileKey);
-        lastInteractionTime = performance.now();
-        // If user has not click-pinned a tile, show/update tooltip immediately on mouse hover
-        if (!pinnedTileKey) {
-          openTooltip(tileKey, false);
-        }
-      }
-
-      function handleTileHoverLeave(tileKey) {
-        if (hoveredTileKey === tileKey) {
-          setHoveredTile(null);
-        }
-        if (!pinnedTileKey) {
-          scheduleHoverHide();
-        }
-      }
 
       function shortestAngleDelta(current, target) {
         let delta = ((target - current) % 360 + 540) % 360 - 180;
@@ -2590,10 +2554,7 @@
         if (isExploded === nextState) return;
         isExploded = nextState;
         stage.classList.toggle('is-exploded', isExploded);
-        if (!isExploded) {
-          clearHoverHideTimer();
-          setHoveredTile(null);
-          isPointerOverTooltip = false;
+        if (activeTooltipKey) {
           closeTooltip();
         }
         lastInteractionTime = performance.now();
@@ -2647,24 +2608,21 @@
         tooltip.style.top = `${Math.round(top)}px`;
       }
 
-      function openTooltip(tileKey, pin) {
+      function openTooltip(tileKey) {
         const entry = tileMap.get(tileKey);
         if (!entry || !tooltip) return;
 
-        clearHoverHideTimer();
         velX = 0;
         velY = 0;
+        focusAnim = null;
 
-        if (pin) {
-          if (pinnedTileKey && pinnedTileKey !== tileKey && tileMap.has(pinnedTileKey)) {
-            tileMap.get(pinnedTileKey).el.classList.remove('is-selected');
-          }
-          pinnedTileKey = tileKey;
-          entry.el.classList.add('is-selected');
+        if (activeTooltipKey && activeTooltipKey !== tileKey && tileMap.has(activeTooltipKey)) {
+          tileMap.get(activeTooltipKey).el.classList.remove('is-selected');
         }
 
         const isSameContent = activeTooltipKey === tileKey && tooltip.classList.contains('is-open');
         activeTooltipKey = tileKey;
+        entry.el.classList.add('is-selected');
 
         if (!isSameContent) {
           const { face, skill } = entry;
@@ -2702,11 +2660,9 @@
 
       function closeTooltip() {
         if (!tooltip) return;
-        clearHoverHideTimer();
-        if (pinnedTileKey && tileMap.has(pinnedTileKey)) {
-          tileMap.get(pinnedTileKey).el.classList.remove('is-selected');
+        if (activeTooltipKey && tileMap.has(activeTooltipKey)) {
+          tileMap.get(activeTooltipKey).el.classList.remove('is-selected');
         }
-        pinnedTileKey = null;
         activeTooltipKey = null;
         tooltip.classList.remove('is-open');
         tooltip.setAttribute('aria-hidden', 'true');
@@ -2714,22 +2670,6 @@
           tooltip.style.transform = 'translateX(-50%) translateY(8px) scale(0.96)';
         }
         lastInteractionTime = performance.now();
-      }
-
-      // Keep unpinned hover tooltip open when pointer moves into the tooltip itself
-      if (tooltip) {
-        tooltip.addEventListener('pointerenter', (e) => {
-          if (e.pointerType !== 'mouse') return;
-          isPointerOverTooltip = true;
-          clearHoverHideTimer();
-        });
-        tooltip.addEventListener('pointerleave', (e) => {
-          if (e.pointerType !== 'mouse') return;
-          isPointerOverTooltip = false;
-          if (!pinnedTileKey && !hoveredTileKey) {
-            scheduleHoverHide();
-          }
-        });
       }
 
       function updateActiveFaceUI() {
@@ -2787,7 +2727,6 @@
 
         const tileHit = e.target.closest('.skill-tile');
         downTileKey = tileHit ? tileHit.dataset.tileKey : null;
-        downInsideCube = Boolean(tileHit || e.target.closest('.skill-cube'));
       });
 
       window.addEventListener('pointermove', (e) => {
@@ -2803,10 +2742,6 @@
         if (!isDragging && travelDist >= 5) {
           isDragging = true;
           stage.classList.add('is-dragging');
-          setHoveredTile(null);
-          if (!pinnedTileKey && activeTooltipKey) {
-            closeTooltip();
-          }
         }
 
         if (isDragging) {
@@ -2832,34 +2767,30 @@
 
         const wasClick = !isCancel && !isDragging && travelDist < 5;
         const clickedTileKey = downTileKey;
-        const clickedCube = downInsideCube;
 
         isPointerDown = false;
         activePointerId = null;
         isDragging = false;
         downTileKey = null;
-        downInsideCube = false;
         stage.classList.remove('is-dragging');
         lastInteractionTime = performance.now();
 
         if (wasClick) {
           velX = 0;
           velY = 0;
-          if (!isExploded) {
-            if (clickedCube) {
-              setExploded(true);
-            }
-          } else {
-            if (clickedTileKey) {
-              // Clicking/tapping a tile pins/locks its tooltip open
-              openTooltip(clickedTileKey, true);
-            } else if (activeTooltipKey) {
-              // Clicking empty stage dismisses/unpins open tooltip first
+          if (clickedTileKey) {
+            // Clicking a tile NEVER explodes/collapses; opens/toggles its 2D tooltip in both states
+            if (activeTooltipKey === clickedTileKey) {
               closeTooltip();
             } else {
-              // Clicking empty stage when no tooltip is open collapses the cube
-              setExploded(false);
+              openTooltip(clickedTileKey);
             }
+          } else if (activeTooltipKey) {
+            // Clicking empty stage closes open tooltip first (without toggling explode/collapse)
+            closeTooltip();
+          } else {
+            // Clicking empty stage when no tooltip is open toggles explode <-> collapse
+            setExploded(!isExploded);
           }
         }
       }
@@ -2878,16 +2809,12 @@
       if (tooltipClose) {
         tooltipClose.addEventListener('click', (e) => {
           e.stopPropagation();
-          setHoveredTile(null);
-          isPointerOverTooltip = false;
           closeTooltip();
         });
       }
 
       window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && activeTooltipKey) {
-          setHoveredTile(null);
-          isPointerOverTooltip = false;
           closeTooltip();
         }
       });
@@ -2932,7 +2859,7 @@
             if (Math.abs(velX) <= 0.01) velX = 0;
             if (Math.abs(velY) <= 0.01) velY = 0;
             changed = true;
-          } else if (!prefersReducedMotion && !activeTooltipKey && !hoveredTileKey && !isPointerOverTooltip) {
+          } else if (!prefersReducedMotion && !activeTooltipKey) {
             // Gently resume smooth continuous auto-rotation after idle
             const idleMs = now - lastInteractionTime;
             if (idleMs > 900) {

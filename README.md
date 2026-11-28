@@ -1,6 +1,6 @@
-# 🌌 Nguyễn Hồ Sỹ Phú - Obsidian Portfolio (v2.0)
+# 🌌 Nguyễn Hồ Sỹ Phú — Intern / Fresher Portfolio
 
-> Modern, high-performance Fullstack & Backend Engineer portfolio with interactive system architecture simulations, live terminal emulation, and clean engineering design.
+> Portfolio cá nhân của **Nguyễn Hồ Sỹ Phú** — Sinh viên mới ra trường ngành Kỹ thuật Phần mềm (Đại học Gia Định), tìm kiếm cơ hội **Intern / Fresher Fullstack hoặc Backend Developer** với Java Spring Boot và Next.js.
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-00f0ff?style=for-the-badge&logo=githubpages&logoColor=black)](https://nhsphu.github.io/Profolio/)
 [![GitHub Profile](https://img.shields.io/badge/GitHub-NhsPhu-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/NhsPhu)
@@ -12,41 +12,38 @@
 
 ## 🎯 Giới thiệu & Định hướng
 
-- **Kỹ sư**: Nguyễn Hồ Sỹ Phú (Sinh năm 2005)
+- **Họ tên**: Nguyễn Hồ Sỹ Phú (Sinh năm 2005)
 - **Học vấn**: Đại học Gia Định — Kỹ thuật Phần mềm (2023–2026), GPA: **7.29 / 10**
 - **Vị trí tìm kiếm**: **Intern / Fresher Fullstack hoặc Backend Developer** (On-site / Hybrid tại TP. Hồ Chí Minh)
-- **Định hướng chuyên sâu**: Thiết kế **Backend API hiệu năng cao**, kiến trúc **Microservices & Hexagonal Architecture**, tích hợp **Event-Driven Broker (RabbitMQ)**, bộ nhớ đệm phân tán (**Redis**) và tìm kiếm đa chiều (**Elasticsearch 8**).
+- **Kỹ năng thực hành qua đồ án**: Nền tảng cơ bản về **Java Spring Boot 3**, **Next.js / React / TypeScript**, đã làm quen **REST API**, **PostgreSQL / MySQL**, **Redis**, **RabbitMQ**, **Elasticsearch 8** và **Docker Compose** qua các đồ án đại học và dự án cá nhân.
 
 ---
 
-## 🌟 Điểm nhấn nổi bật trên giao diện mới (v2.0)
+## 🌟 Điểm nhấn trên giao diện Portfolio
 
 1. **Cyber-OLED Dark Aesthetics**:
    - Tông màu Obsidian kết hợp Neon Cyan (`#00f0ff`), Electric Indigo (`#6366f1`) và Emerald (`#10b981`).
-   - Mạng lưới hạt Neural tương tác thời gian thực bằng Canvas 2D.
-   - Hiệu ứng Spotlight Card theo dõi vị trí chuột và ánh sáng viền động.
+   - Mạng lưới hạt Neural tương tác bằng Canvas 2D và thẻ Spotlight responsive.
 
-2. **Mô phỏng kiến trúc hệ thống trực quan (Interactive System Simulator)**:
-   - Cho phép người xem chạy 3 kịch bản thực tế của dự án Omni:
-     - *Đặt hàng Async (RabbitMQ + VNPay + GHN)*
-     - *Tìm kiếm đa chiều (Elasticsearch 8 + Redis Cache)*
-     - *Phòng thủ lưu lượng (Bucket4j + Redis Distributed Rate Limit)*
-   - Có hộp nhật ký viễn thám hiển thị chi tiết theo từng mili-giây.
+2. **Khối Lập Phương Kỹ Năng 3D Tương Tác (3D Interactive Skill Cube)**:
+   - Xây dựng hoàn toàn bằng CSS 3D + Vanilla JS (không dùng thư viện 3D ngoài).
+   - Xoay tự do 360°, tách khối thành hình cầu Fibonacci 24 kỹ năng khi click khoảng trống hoặc bấm nút `Tách khối 3D`, và click vào từng khối kỹ năng để xem chi tiết công nghệ đã thực hành.
 
-3. **Bảng điều khiển dòng lệnh tương tác (Interactive Bash CLI)**:
-   - Hỗ trợ gõ lệnh hoặc bấm phím tắt: `help`, `neofetch`, `omni`, `moviefilm`, `sales`, `skills`, `contact`, `clear`.
-   - Phím nóng toàn cục: Nhấn phím `T` để bật toàn màn hình CLI từ bất cứ đâu.
+3. **Mô phỏng Luồng Xử Lý Đồ Án (Learning & Architecture Demo)**:
+   - Minh họa 3 kịch bản học tập từ đồ án cá nhân Omni Marketplace:
+     - *Đặt hàng bất đồng bộ (RabbitMQ + VNPay & GHN Sandbox)*
+     - *Tìm kiếm sản phẩm (Elasticsearch 8 + Redis Cache)*
+     - *Giới hạn tần suất & Cache (Bucket4j + Redis)*
 
-4. **Trình bày dự án chuyên sâu (Deep-dive Showcases)**:
-   - 🛒 **Omni Marketplace**: E-commerce B2B2C, Hexagonal Architecture, RabbitMQ, Elasticsearch 8, Redis, Prometheus, Grafana, Zipkin.
-   - 🎬 **Movie Streaming System**: HLS Adaptive Bitrate (FFmpeg), Kotlin Android (ExoPlayer), React 18, FastAPI AI Recommendation.
-   - 📊 **AI Sales Analysis Dashboard**: ETL Pipeline, Groq API NLP, Facebook Prophet dự báo (MAPE < 8%).
-   - 📚 **Bookstore Manager**: Python, CustomTkinter, MySQL.
+4. **Bảng điều khiển dòng lệnh tương tác (Interactive Bash CLI)**:
+   - Hỗ trợ gõ lệnh: `help`, `neofetch`, `omni`, `moviefilm`, `sales`, `skills`, `contact`, `clear`.
+   - Phím nóng `T` để mở nhanh cửa sổ CLI.
 
-5. **Bộ công cụ chuyển đổi tiện lợi**:
-   - 1-click Copy email `nguyenhosyphu@gmail.com` với Toast thông báo.
-   - Form liên hệ nhanh tự động mở mail client.
-   - Tối ưu 100% Responsive trên Mobile, Tablet, Laptop và màn hình 4K.
+5. **Đồ án cá nhân & học tập**:
+   - 🛒 **Omni Marketplace**: Đồ án TMĐT B2B2C thực hành Java Spring Boot 3, Next.js 16, RabbitMQ, Redis, Elasticsearch 8 và Docker trên môi trường local/sandbox.
+   - 🎬 **Movie Streaming System**: Đồ án xem phim Web & Android thực hành FFmpeg (HLS), Kotlin Android (ExoPlayer), React 18 và FastAPI gợi ý phim cơ bản.
+   - 📊 **AI Sales Analysis Dashboard**: Đồ án phân tích dữ liệu bán hàng mẫu với Python, Streamlit, Plotly, Groq API và Facebook Prophet.
+   - 📚 **Bookstore Manager**: Đồ án ứng dụng Desktop quản lý nhà sách cơ bản với Python, CustomTkinter và MySQL.
 
 ---
 
@@ -54,5 +51,5 @@
 
 1. Vào **[Settings > Pages](https://github.com/NhsPhu/Profolio/settings/pages)** của repository `NhsPhu/Profolio`.
 2. Tại mục **Build and deployment > Branch**: Chọn branch **`main`**, folder **`/(root)`** rồi bấm **Save**.
-3. Sau 1–2 phút, website của bạn sẽ hoạt động trực tiếp tại:  
+3. Sau 1–2 phút, website sẽ hoạt động tại:  
    👉 **`https://nhsphu.github.io/Profolio/`**
